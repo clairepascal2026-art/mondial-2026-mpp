@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mondial 2026 — MPP Pronostics</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.9.0/dist/tabler-icons.min.css">
+<style>
+  :root {
+    --bg: #ffffff; --bg2: #f7f7f5; --bg3: #f0efe9;
+    --text: #1a1a18; --text2: #6b6a65; --text3: #9a9994;
+    --border: rgba(0,0,0,0.12); --border2: rgba(0,0,0,0.22);
+    --green-bg: #eaf3de; --green-text: #3b6d11;
+    --blue-bg: #e6f1fb; --blue-text: #185fa5;
+    --amber-bg: #faeeda; --amber-text: #854f0b;
+    --red-bg: #fcebeb; --red-text: #a32d2d;
+    --success: #3b6d11; --danger: #a32d2d;
+    --rad: 8px; --rad-lg: 12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1e1e1c; --bg2: #2a2a27; --bg3: #323230;
+      --text: #f0ede6; --text2: #a09e98; --text3: #6b6a65;
+      --border: rgba(255,255,255,0.1); --border2: rgba(255,255,255,0.2);
+      --green-bg: #173404; --green-text: #c0dd97;
+      --blue-bg: #042c53; --blue-text: #b5d4f4;
+      --amber-bg: #412402; --amber-text: #fac775;
+      --red-bg: #501313; --red-text: #f7c1c1;
+      --success: #c0dd97; --danger: #f7c1c1;
+    }
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg3);color:var(--text);font-size:15px;line-height:1.5}
+  .header{background:var(--bg);border-bottom:.5px solid var(--border);padding:14px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100}
+  .header-title{font-size:20px;font-weight:600}
+  .header-sub{font-size:13px;color:var(--text2)}
+  .container{max-width:960px;margin:0 auto;padding:20px 16px}
+  .top-nav{display:flex;gap:4px;margin-bottom:20px;border-bottom:.5px solid var(--border);flex-wrap:wrap;position:sticky;top:57px;background:var(--bg3);z-index:90;padding-top:8px}
+  .nav-btn{padding:8px 16px;font-size:14px;background:none;border:none;border-bottom:2.5px solid transparent;cursor:pointer;color:var(--text2);font-family:inherit;white-space:nowrap;margin-bottom:-1px;transition:color .15s}
+  .nav-btn:hover{color:var(--text)}
+  .nav-btn.active{color:var(--text);border-bottom-color:var(--text);font-weight:500}
+  .page{display:none}.page.on{display:block}
+
+  /* GROUP GRID */
+  .grp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:20px}
+  .grp-btn{background:var(--bg);border:.5px solid var(--border);border-radius:var(--rad-lg);padding:12px;cursor:pointer;text-align:left;transition:all .15s;color:var(--text)}
+  .grp-btn:hover{border-color:var(--border2);background:var(--bg2)}
+  .grp-btn.active{border:2px solid var(--blue-text);background:var(--blue-bg)}
+  .grp-letter{font-size:18px;font-weight:600;margin-bottom:5px}
+  .grp-teams{font-size:11px;color:var(--text2);line-height:1.7}
+
+  /* SECTION TABS */
+  .sec-nav{display:flex;gap:6px;margin-bottom:16px}
+  .sec-btn{padding:6px 14px;font-size:13px;background:var(--bg2);border:.5px solid var(--border);border-radius:var(--rad);cursor:pointer;color:var(--text2);font-family:inherit;transition:all .15s}
+  .sec-btn:hover{color:var(--text);background:var(--bg3)}
+  .sec-btn.active{background:var(--text);color:var(--bg);border-color:var(--text)}
+
+  /* TEAM CARDS */
+  .team-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:14px}
+  .tc{background:var(--bg);border:.5px solid var(--border);border-radius:var(--rad-lg);padding:12px;cursor:pointer;transition:all .15s}
+  .tc:hover{border-color:var(--border2)}
+  .tc.sel{border:2px solid var(--blue-text);background:var(--blue-bg)}
+  .tc-head{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+  .tc-flag{font-size:22px}
+  .tc-name{font-size:13px;font-weight:600}
+  .tc-rank{font-size:11px;color:var(--text2)}
+  .tc-tags{display:flex;gap:4px;flex-wrap:wrap}
+  .tag{font-size:10px;padding:2px 7px;border-radius:var(--rad);font-weight:500}
+  .tg{background:var(--green-bg);color:var(--green-text)}
+  .tb{background:var(--blue-bg);color:var(--blue-text)}
+  .tw{background:var(--amber-bg);color:var(--amber-text)}
+  .ts{background:var(--bg3);color:var(--text2)}
+
+  /* TEAM DETAIL */
+  .tdetail{background:var(--bg);border:.5px solid var(--border);border-radius:var(--rad-lg);padding:20px;margin-bottom:14px}
+  .tdetail h3{font-size:17px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .tcoach{font-size:12px;color:var(--text2);font-weight:400;margin-left:4px}
+  .meter-row{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .meter-label{font-size:12px;color:var(--text2);width:80px;flex-shrink:0}
+  .meter-bar{flex:1;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
+  .mf{height:100%;border-radius:3px}
+  .mg{background:#639922}.mb{background:#185fa5}.mw{background:#ba7517}.mr{background:#a32d2d}
+  .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+  .db{background:var(--bg2);border-radius:var(--rad);padding:12px}
+  .db h4{font-size:11px;color:var(--text2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
+  .db p{font-size:13px;line-height:1.55}
+  .full{grid-column:1/-1}
+
+  /* MATCH CARDS */
+  .mc{background:var(--bg);border:.5px solid var(--border);border-radius:var(--rad-lg);padding:16px 18px;margin-bottom:12px}
+  .mmeta{font-size:11px;color:var(--text2);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+  .mteams{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+  .mt{flex:1}.mt.r{text-align:right}
+  .mtn{font-size:15px;font-weight:600}
+  .mtr{font-size:11px;color:var(--text2)}
+  .mvs{font-size:13px;color:var(--text3);flex-shrink:0;padding:0 4px}
+  .odds-row{display:flex;gap:6px;margin-bottom:12px}
+  .op{flex:1;text-align:center;background:var(--bg2);border-radius:var(--rad);padding:7px 4px}
+  .ol{font-size:10px;color:var(--text2);margin-bottom:2px}
+  .ov{font-size:14px;font-weight:600}
+  .analysis{font-size:13px;color:var(--text2);line-height:1.65;margin-bottom:10px;border-left:3px solid var(--border2);padding-left:10px}
+  .conseil{font-size:13px;background:var(--green-bg);color:var(--green-text);padding:9px 12px;border-radius:var(--rad);margin-bottom:12px;line-height:1.5}
+
+  /* PRONO */
+  .prono-section h4{font-size:12px;color:var(--text2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+  .pi{display:flex;align-items:center;gap:8px}
+  .pi input[type=number]{width:48px;text-align:center;font-size:17px;font-weight:600;padding:6px 4px;border:1.5px solid var(--border2);border-radius:var(--rad);background:var(--bg);color:var(--text);font-family:inherit}
+  .pi input[type=number]:focus{outline:none;border-color:var(--blue-text)}
+  .psep{font-size:16px;color:var(--text2)}
+  .pteam{font-size:12px;color:var(--text2);flex:1}
+  .pteam.r{text-align:right}
+  .save-btn{margin-top:10px;width:100%;padding:8px;font-size:13px;background:var(--bg2);border:.5px solid var(--border2);border-radius:var(--rad);cursor:pointer;color:var(--text);font-family:inherit;transition:all .15s}
+  .save-btn:hover{background:var(--bg3)}
+  .save-btn:active{transform:scale(.98)}
+  .saved-ok{font-size:12px;color:var(--success);margin-top:6px;display:none}
+
+  /* STANDINGS */
+  .stt{width:100%;border-collapse:collapse;font-size:13px}
+  .stt th{font-size:11px;color:var(--text2);font-weight:500;padding:6px 8px;text-align:center;border-bottom:.5px solid var(--border);text-transform:uppercase;letter-spacing:.4px}
+  .stt th:first-child{text-align:left}
+  .stt td{padding:9px 8px;text-align:center;border-bottom:.5px solid var(--border)}
+  .stt td:first-child{text-align:left;font-weight:600}
+  .stt tr:last-child td{border-bottom:none}
+  .qi{display:inline-block;width:4px;height:18px;border-radius:2px;margin-right:8px;vertical-align:middle}
+  .qg{background:#639922}.qy{background:#ba7517}.qr{background:var(--border2)}
+  .pos-up{color:var(--success)}.pos-dn{color:var(--danger)}
+
+  /* MPP DASHBOARD */
+  .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+  .stat-card{background:var(--bg);border:.5px solid var(--border);border-radius:var(--rad-lg);padding:14px;text-align:center}
+  .stat-num{font-size:26px;font-weight:700}
+  .stat-lbl{font-size:11px;color:var(--text2);margin-top:3px}
+  .fav-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+  .fav-card{background:var(--bg);border:.5px solid var(--border);border-radius:var(--rad-lg);padding:14px}
+  .fav-card label{font-size:12px;color:var(--text2);display:block;margin-bottom:6px;font-weight:500;text-transform:uppercase;letter-spacing:.4px}
+  .fav-card select{width:100%;padding:7px 10px;font-size:13px;border:.5px solid var(--border2);border-radius:var(--rad);background:var(--bg);color:var(--text);font-family:inherit;cursor:pointer}
+  .fav-recap{background:var(--bg);border:.5px solid var(--border);border-radius:var(--rad-lg);padding:16px;font-size:14px;line-height:2.2}
+  .section-title{font-size:16px;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+
+  /* PROGRESS BAR */
+  .progress-wrap{background:var(--bg3);border-radius:3px;height:6px;margin-top:6px;overflow:hidden}
+  .progress-fill{height:100%;background:var(--blue-text);border-radius:3px;transition:width .3s}
+
+  /* MATCH DU SOIR */
+  .mdj-header{background:var(--bg);border:.5px solid var(--border);border-radius:var(--rad-lg);padding:18px;margin-bottom:14px}
+  .mdj-matchup{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+  .mdj-team{text-align:center;flex:1}
+  .mdj-flag{font-size:40px;display:block;margin-bottom:4px}
+  .mdj-name{font-size:16px;font-weight:700}
+  .mdj-rank{font-size:12px;color:var(--text2)}
+  .mdj-vs{font-size:24px;font-weight:700;color:var(--text3);flex-shrink:0}
+  .mdj-meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+  .mdj-pill{font-size:12px;background:var(--bg2);border-radius:var(--rad);padding:4px 10px;color:var(--text2)}
+  .mdj-odds{display:flex;gap:6px}
+  .mdj-odd{flex:1;text-align:center;background:var(--bg2);border-radius:var(--rad);padding:7px 4px}
+  .mdj-odd-l{font-size:10px;color:var(--text2);margin-bottom:2px}
+  .mdj-odd-v{font-size:15px;font-weight:700}
+  .mdj-section{font-size:14px;font-weight:600;margin:16px 0 8px;display:flex;align-items:center;gap:6px}
+  .mdj-block{background:var(--bg);border:.5px solid var(--border);border-radius:var(--rad-lg);padding:14px;margin-bottom:10px}
+  .mdj-block h4{font-size:12px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+  .mdj-block p,.mdj-block li{font-size:13px;line-height:1.7;color:var(--text)}
+  .mdj-block ul{padding-left:16px}
+  .mdj-xi{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+  .mdj-player{font-size:12px;background:var(--bg2);border-radius:var(--rad);padding:3px 8px}
+  .mdj-verdict{background:var(--green-bg);border:.5px solid var(--green-text);border-radius:var(--rad-lg);padding:16px;margin-bottom:10px}
+  .mdj-verdict h3{font-size:15px;font-weight:700;color:var(--green-text);margin-bottom:8px}
+  .mdj-verdict p{font-size:13px;line-height:1.7;color:var(--green-text)}
+  .mdj-prono-box{background:var(--bg);border:2px solid var(--green-text);border-radius:var(--rad-lg);padding:16px;text-align:center;margin-bottom:10px}
+  .mdj-score{font-size:32px;font-weight:800;color:var(--green-text);margin:4px 0}
+  .mdj-updated{font-size:11px;color:var(--text3);text-align:right;margin-bottom:8px}
+
+  .res-stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+  .res-stat{background:var(--bg);border:.5px solid var(--border);border-radius:var(--rad-lg);padding:14px;text-align:center}
+  .res-stat-num{font-size:26px;font-weight:700}
+  .res-stat-lbl{font-size:11px;color:var(--text2);margin-top:3px}
+  .res-stat-sub{font-size:11px;margin-top:2px}
+  .res-match{background:var(--bg);border:.5px solid var(--border);border-radius:var(--rad-lg);padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .res-teams{flex:1;min-width:160px}
+  .res-teams-name{font-size:13px;font-weight:600}
+  .res-teams-date{font-size:11px;color:var(--text2)}
+  .res-scores{display:flex;gap:8px;align-items:center;flex-shrink:0}
+  .res-score-box{text-align:center;min-width:52px}
+  .res-score-lbl{font-size:10px;color:var(--text2);margin-bottom:2px}
+  .res-score-val{font-size:15px;font-weight:700}
+  .res-badge{font-size:11px;font-weight:600;padding:3px 8px;border-radius:var(--rad);flex-shrink:0}
+  .badge-exact{background:var(--green-bg);color:var(--green-text)}
+  .badge-issue{background:var(--blue-bg);color:var(--blue-text)}
+  .badge-miss{background:var(--red-bg);color:var(--red-text)}
+  .badge-pending{background:var(--bg3);color:var(--text3)}
+  .res-claude{font-size:11px;color:var(--text2);flex-shrink:0;min-width:60px;text-align:center}
+  .res-section-title{font-size:15px;font-weight:600;margin:20px 0 10px;display:flex;align-items:center;gap:8px}
+  .insight-card{background:var(--bg);border:.5px solid var(--border);border-radius:var(--rad-lg);padding:14px;margin-bottom:10px}
+  .insight-card h4{font-size:13px;font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+  .insight-card p{font-size:13px;color:var(--text2);line-height:1.6}
+  .score-input-row{display:flex;align-items:center;gap:6px;margin-top:8px}
+  .score-input-row input{width:40px;text-align:center;font-size:14px;font-weight:600;padding:5px 3px;border:1.5px solid var(--border2);border-radius:var(--rad);background:var(--bg);color:var(--text);font-family:inherit}
+  .score-input-row .save-btn{padding:5px 12px;font-size:12px;width:auto}
+  @media(max-width:600px){.res-stat-grid{grid-template-columns:repeat(2,1fr)}.res-scores{gap:5px}}
+
+    .grp-grid{grid-template-columns:repeat(3,1fr)}
+    .team-row{grid-template-columns:1fr 1fr}
+    .detail-grid{grid-template-columns:1fr}
+    .fav-grid{grid-template-columns:1fr}
+    .stats-row{grid-template-columns:repeat(2,1fr)}
+    .mteams{gap:6px}
+    .mtn{font-size:13px}
+    .full{grid-column:auto}
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span style="font-size:26px">⚽</span>
+  <div style="flex:1">
+    <div class="header-title">Mondial 2026</div>
+    <div class="header-sub">MPP · Pronostics · 12 groupes · 48 équipes</div>
+  </div>
+  <button onclick="saveAll()" id="save-all-btn" style="padding:8px 16px;font-size:13px;font-weight:600;background:#639922;color:#fff;border:none;border-radius:var(--rad);cursor:pointer;font-family:inherit;flex-shrink:0;transition:opacity .15s">💾 Enregistrer tout</button>
+  <span id="save-all-ok" style="font-size:12px;color:var(--success);margin-left:8px;display:none">✅ Sauvegardé !</span>
+</div>
+
+<div class="container">
+  <nav class="top-nav">
+    <button class="nav-btn active" onclick="nav('groupes',this)">Groupes & fiches</button>
+    <button class="nav-btn" onclick="nav('match',this)">🔥 Match du soir</button>
+    <button class="nav-btn" onclick="nav('calendrier',this)">📅 Calendrier</button>
+    <button class="nav-btn" onclick="nav('resultats',this)">📊 Résultats</button>
+    <button class="nav-btn" onclick="nav('mpp',this)">Favoris MPP</button>
+  </nav>
+
+  <div id="page-groupes" class="page on">
+    <div class="grp-grid" id="grp-grid"></div>
+    <div id="grp-content"></div>
+  </div>
+
+  <div id="page-match" class="page">
+    <div id="match-content"></div>
+  </div>
+
+  <div id="page-calendrier" class="page">
+    <div id="cal-content"></div>
+  </div>
+
+  <div id="page-resultats" class="page">
+    <div id="res-content"></div>
+  </div>
+
+  <div id="page-mpp" class="page">
+
+    <div class="stats-row" id="stats-row">
+      <div class="stat-card"><div class="stat-num" id="st-p">0</div><div class="stat-lbl">Pronos saisis</div><div class="progress-wrap"><div class="progress-fill" id="st-bar" style="width:0%"></div></div></div>
+      <div class="stat-card"><div class="stat-num">72</div><div class="stat-lbl">Total matchs</div></div>
+      <div class="stat-card"><div class="stat-num" id="st-b">0</div><div class="stat-lbl">Buts prévus</div></div>
+      <div class="stat-card"><div class="stat-num" id="st-avg">—</div><div class="stat-lbl">Buts / match</div></div>
+    </div>
+    <div style="margin-bottom:16px;display:flex;gap:8px;flex-wrap:wrap">
+      <button onclick="exportPronos()" style="padding:8px 16px;font-size:13px;background:var(--bg);border:.5px solid var(--border2);border-radius:var(--rad);cursor:pointer;font-family:inherit;color:var(--text)">📋 Copier mes pronos (JSON)</button>
+      <button onclick="clearPronos()" style="padding:8px 16px;font-size:13px;background:var(--red-bg);border:.5px solid var(--border2);border-radius:var(--rad);cursor:pointer;font-family:inherit;color:var(--red-text)">🗑️ Réinitialiser</button>
+      <span id="export-ok" style="font-size:12px;color:var(--success);padding:8px;display:none">✅ Copié dans le presse-papiers !</span>
+    </div>
+    <div class="section-title">🏆 Mes pronostics globaux</div>
+    <div class="fav-grid">
+      <div class="fav-card"><label>Vainqueur du Mondial</label><select id="sel-w" onchange="saveFav()"><option value="">— Choisir —</option><option>France 🇫🇷</option><option>Espagne 🇪🇸</option><option>Angleterre 🏴󠁧󠁢󠁥󠁮󠁧󠁿</option><option>Brésil 🇧🇷</option><option>Argentine 🇦🇷</option><option>Portugal 🇵🇹</option><option>Allemagne 🇩🇪</option><option>Pays-Bas 🇳🇱</option><option>Mexique 🇲🇽</option><option>Corée du Sud 🇰🇷</option><option>Colombie 🇨🇴</option><option>USA 🇺🇸</option></select></div>
+      <div class="fav-card"><label>Finaliste</label><select id="sel-r" onchange="saveFav()"><option value="">— Choisir —</option><option>France 🇫🇷</option><option>Espagne 🇪🇸</option><option>Angleterre 🏴󠁧󠁢󠁥󠁮󠁧󠁿</option><option>Brésil 🇧🇷</option><option>Argentine 🇦🇷</option><option>Portugal 🇵🇹</option><option>Allemagne 🇩🇪</option><option>Pays-Bas 🇳🇱</option><option>Mexique 🇲🇽</option><option>Corée du Sud 🇰🇷</option><option>Colombie 🇨🇴</option><option>USA 🇺🇸</option></select></div>
+      <div class="fav-card"><label>Golden Boot — Meilleur buteur</label><select id="sel-g" onchange="saveFav()"><option value="">— Choisir —</option><option>Kylian Mbappé 🇫🇷</option><option>Harry Kane 🏴󠁧󠁢󠁥󠁮󠁧󠁿</option><option>Erling Haaland 🇳🇴</option><option>Lionel Messi 🇦🇷</option><option>Lamine Yamal 🇪🇸</option><option>Vinicius Jr 🇧🇷</option><option>Cristiano Ronaldo 🇵🇹</option><option>Raphinha 🇧🇷</option><option>Raúl Jiménez 🇲🇽</option><option>Son Heung-min 🇰🇷</option><option>Patrik Schick 🇨🇿</option><option>Alexander Isak 🇸🇪</option><option>Viktor Gyökeres 🇸🇪</option><option>Florian Wirtz 🇩🇪</option><option>Darwin Núñez 🇺🇾</option></select></div>
+      <div class="fav-card"><label>Outsider / Surprise du tournoi</label><select id="sel-s" onchange="saveFav()"><option value="">— Choisir —</option><option>Maroc 🇲🇦</option><option>Japon 🇯🇵</option><option>USA 🇺🇸</option><option>Turquie 🇹🇷</option><option>Sénégal 🇸🇳</option><option>Colombie 🇨🇴</option><option>Équateur 🇪🇨</option><option>Autriche 🇦🇹</option><option>Corée du Sud 🇰🇷</option><option>Bosnie 🇧🇦</option><option>Canada 🇨🇦</option></select></div>
+    </div>
+    <div class="section-title">📋 Récapitulatif</div>
+    <div class="fav-recap" id="fav-recap">Aucune sélection pour l'instant.</div>
+  </div>
+</div>
+
+<script>
+const GD = {
+  A:{teams:[
+    {c:'mex',fl:'🇲🇽',n:'Mexique',rk:'#15',atk:75,def:78,tmp:60,agg:60,coach:'Aguirre · 4-3-3',style:'Bloc médian + contre',atkT:'tg',defT:'tb',atkD:'Jiménez (Fulham, 11 buts depuis sept 25) solide. Ailiers rapides. Dépend de Santiago Giménez (blessé, incertain).',defD:'6 clean sheets sur 8 matchs. Vásquez (Genoa) excellente lecture. Ochoa légendaire à 40 ans pour son 6e Mondial.',styleD:'Bloc médian, contre-attaque rapide via les ailiers. À l\'Azteca: pressing plus haut sous la pression du public.',str:'Azteca (87k spectateurs), 2 titres CONCACAF consécutifs, set pieces (Vásquez aérien), invaincus en ouverture x7.',weak:'N\'a pas passé les 8es depuis 1986. Giménez incertain. 0-4 vs Colombie oct 2025.',key:'Edson Álvarez (pivot · West Ham, PL), Raúl Jiménez (9 · Fulham, PL), Álvaro Fidalgo (Real Betis, La Liga)'},
+    {c:'rsa',fl:'🇿🇦',n:'Afrique du Sud',rk:'#60',atk:40,def:72,tmp:45,agg:50,coach:'Broos · 4-3-3',style:'Contre-attaque',atkT:'tw',defT:'tb',atkD:'Foster (Burnley) en 9. Mofokeng et Appollis = ailiers très rapides, parmi les plus vifs de CAF.',defD:'Ronwen Williams gardien exceptionnel (4 pénos arrêtés CAN 2023). 5 clean sheets sur 5 derniers matchs qualifs. Ligne haute risquée.',styleD:'Défensif d\'abord, contre-attaque via les flancs. Bloc organisé. Joue pour ne pas perdre.',str:'Williams (gardien de classe mondiale), rigueur défensive, vitesse des ailiers, qualifié en tête du groupe CAF.',weak:'5 matchs sans victoire en 2026. Jamais au-delà du 1er tour. Ligne haute vulnérable.',key:'Ronwen Williams (but), Relebohile Mofokeng (ailier), Lyle Foster (9)'},
+    {c:'kor',fl:'🇰🇷',n:'Corée du Sud',rk:'#25',atk:85,def:55,tmp:80,agg:75,coach:'Hong Myung-bo · 4-2-3-1',style:'Pressing haut',atkT:'tg',defT:'tw',atkD:'Son (gauche, finisseur élite) + Kang-in Lee (PSG, créatif droit) = une des meilleures paires d\'ailiers du tournoi.',defD:'Kim Min-jae (Bayern) excellent mais ligne haute laisse des espaces. 0-4 vs CIV mars 2026 alarmant.',styleD:'Pressing haut, vertical rapide, tempo élevé. Cherche à dominer. Vulnérable en contre.',str:'Meilleur effectif jamais amené à un Mondial. Son pour son dernier Mondial. Kim Min-jae world class.',weak:'Coach peu populaire, inconsistance tactique. Trop dépendant Son+Lee. Défense exposée.',key:'Son Heung-min (cap. · Tottenham ⭐CL), Kang-in Lee (PSG ⭐CL), Kim Min-jae (Bayern ⭐CL)'},
+    {c:'cze',fl:'🇨🇿',n:'Tchéquie',rk:'#41',atk:50,def:76,tmp:35,agg:40,coach:'Koubek (74 ans) · 4-2-3-1',style:'Bloc bas / défensif',atkT:'tw',defT:'tb',atkD:'Tout dépend de Schick (Leverkusen) — excellent 9, adore les lignes hautes. Peu d\'alternatives sans lui.',defD:'Bloc bas très compact. Souček = muraille. 2 barrages gagnés aux tirs au but. Krejčí solide.',styleD:'Pragmatique défensif. Tempo très lent. Attend les erreurs. Archétype du 0-0 ou 1-0.',str:'Solidité mentale, Souček leadership, Schick létal sur ballon dans le dos.',weak:'Absents depuis 2006. Schick sujet blessures. Quasi nulle créativité sans lui.',key:'Patrik Schick (9 · Leverkusen ⭐CL), Tomáš Souček (West Ham, PL), Ladislav Krejčí (cap. · Slavia Prague ⭐CL)'}
+  ],matches:[
+    {id:'a1',j:1,d:'11 juin · Azteca, Mexico City',h:'mex',a:'rsa',o:['1.46','4.05','6.30'],an:'Match d\'ouverture du Mondial. 87k à l\'Azteca, pression nationale totale. Mexique invaincu lors de ses 7 dernières ouvertures. Afrique du Sud défend bien (Williams) mais trop limité offensivement.',c:'Mexique dominant mais match fermé possible. Williams peut réaliser des miracles. Under 2.5 buts crédible.',p:'2-0',sc:[49,125,148,83,9,7],strat:{score:'2-0 Mexique',pts:49,risk:'low',txt:'✅ CONFIRMATION : 83% sur Mexique, cote implique 68%. L\'issue est surjouée par les joueurs MPP — peu de valeur de différenciation. Mais conviction forte sur cette issue, on garde. Focus sur le score exact.'}},
+    {id:'a2',j:1,d:'12 juin · Akron, Guadalajara',h:'kor',a:'cze',o:['2.67','3.15','2.60'],an:'Styles opposés : Corée presse haut, Tchéquie joue bas. Schick peut surprendre sur ballon dans le dos de Kim Min-jae. Son et Lee peuvent faire la différence. Terrain neutre.',c:'Le nul a de la valeur (cote 3.15). Deux équipes prudentes qui ont besoin des 3 pts.',p:'1-1',sc:[96,107,91,31,50,19],strat:{score:'1-1 nul',pts:107,risk:'low',txt:'✅ CONFIRMATION : 50% sur nul, cote implique 32%. L\'issue est très surjouée. Mais notre analyse tactique confirme le nul (styles opposés, deux équipes prudentes). On assume l\'issue populaire.'}},
+    {id:'a3',j:2,d:'17 juin · Azteca, Mexico City',h:'mex',a:'kor',o:['1.80','3.50','4.20'],an:'Choc du groupe. Mexique à domicile face à la meilleure attaque du groupe. Álvarez clé pour éteindre Lee. Match ouvert.',c:'Les deux équipes marquent probable. Mexique favori grâce à l\'Azteca.',p:'2-1',sc:[69,117,129,60,28,12],strat:{score:'2-1 Mexique',pts:69,risk:'low',txt:'✅ CONFIRMATION : 60% sur Mexique, cote implique 56%. Bien calibré. Mexique à domicile face à la Corée — conviction forte, peu de valeur MPP supplémentaire à chercher.'}},
+    {id:'a4',j:2,d:'17 juin · BBVA, Monterrey',h:'cze',a:'rsa',o:['2.00','3.40','3.80'],an:'RSA doit attaquer si elle a perdu J1. Schick vs ligne haute de Broos — match clé. Tchéquie a plus de ressources mais Williams peut tenir.',c:'Tchéquie favorite. RSA dangereuse en contre via Mofokeng/Appollis.',p:'1-0',sc:[142,112,62,15,28,57],strat:{score:'0-1 Tchéquie',pts:142,risk:'low',txt:'✅ CONFIRMATION : 57% sur Tchéquie (domicile RSA), cote implique 26% seulement pour victoire RSA. Notre prono est Tchéquie gagnante — bien suivi par les joueurs, conviction solide.'}},
+    {id:'a5',j:3,d:'24 juin · Azteca, Mexico City',h:'cze',a:'mex',o:['5.50','4.00','1.60'],an:'Mexique devrait avoir 6 pts. Tchéquie potentiellement qualifiée peut défendre intelligemment.',c:'Mexique s\'impose à domicile mais Tchéquie solide.',p:'0-1',sc:[91,99,109,46,43,10],strat:{score:'1-0 Mexique',pts:91,risk:'mid',txt:'⚠️ Attention : l\'app pense que c\'est quasi 50/50 nul/Mexique (43%/46%). Mets victoire Mexique 91 pts — c\'est l\'issue la moins jouée mais la plus probable selon notre analyse (domicile Azteca, Mexique déjà qualifié joue pour être 1er).'}},
+    {id:'a6',j:3,d:'24 juin · BBVA, Monterrey',h:'rsa',a:'kor',o:['3.80','3.60','1.90'],an:'Probable finale de groupe pour la Corée. RSA libérée. Son et Lee décisifs.',c:'Corée trop forte individuellement.',p:'0-2',sc:[117,103,87,15,34,51],strat:{score:'0-2 Corée',pts:87,risk:'low',txt:'Issue : victoire Corée (51%). Score 0-2 est le plus logique. Peu de valeur supplémentaire à chercher ici — reste sur 0-2 qui est dans la bonne issue et cohérent avec l\'analyse.'}}
+  ]},
+  B:{teams:[
+    {c:'can',fl:'🇨🇦',n:'Canada',rk:'#25',atk:72,def:65,tmp:70,agg:68,coach:'Marsch · 4-3-3',style:'Pressing intensif',atkT:'tg',defT:'tb',atkD:'Alphonso Davies (gauche) électrique. Jonathan David (Lille) buteur prolifique.',defD:'Défense correcte. 1 seule défaite en 15 matchs sous Marsch.',styleD:'Pressing haut intense, jeu vertical rapide. Énergie et physique.',str:'Co-hôte (Toronto), Davies électrique, David prolifique, génération dorée du foot canadien.',weak:'Jamais passé le 1er tour. Sorti aux pénos vs Guatemala Gold Cup 2025.',key:'Alphonso Davies (gauche · Real Madrid ⭐CL), Jonathan David (9 · Lille, Ligue 1), Tajon Buchanan (Inter ⭐CL)'},
+    {c:'sui',fl:'🇨🇭',n:'Suisse',rk:'#19',atk:68,def:78,tmp:65,agg:62,coach:'Yakin · 4-3-3',style:'Contrôle du jeu',atkT:'ts',defT:'tb',atkD:'Xherdan Shaqiri (expérience), Breel Embolo (9). Collectif très bien huilé.',defD:'Bloc défensif extrêmement solide. 6 qualifications mondiales consécutives. A éliminé France, Italie, Espagne.',styleD:'Possession organisée, maîtrise du milieu, transitions propres. L\'équipe la plus techniquement complète.',str:'Expérience Mondial (6 participations consécutives), a sorti France/Italie/Espagne, qualification parfaite.',weak:'N\'a pas dépassé les 8es depuis 1954. Peut être stérile face aux équipes qui défendent très bas.',key:'Granit Xhaka (cap. · Leverkusen ⭐CL), Breel Embolo (9 · Monaco ⭐CL), Manuel Akanji (Man City ⭐CL)'},
+    {c:'bih',fl:'🇧🇦',n:'Bosnie',rk:'#58',atk:65,def:60,tmp:65,agg:70,coach:'Prosinecki · 4-2-3-1',style:'Offensif direct',atkT:'tg',defT:'tw',atkD:'Nouvelle génération menée par Demirovic et Borna Sosa. Physique et direct.',defD:'Défense correcte mais vulnérable sur les transitions. A éliminé l\'Italie aux pénos.',styleD:'Pressing-contre, jeu direct et physique. Peut être désorganisé contre les équipes techniques.',str:'Euphorie après élimination de l\'Italie. Équipe motivée, physique, dangereuse offensivement.',weak:'Niveau défensif insuffisant contre les grosses équipes. 2e Mondial seulement.',key:'Ermedin Demirovic (attaquant · Stuttgart, Bundesliga), Borna Sosa (gauche · Ajax ⭐CL), Armin Gigović'},
+    {c:'qat',fl:'🇶🇦',n:'Qatar',rk:'#55',atk:50,def:55,tmp:55,agg:50,coach:'Lopetegui · 4-3-3',style:'Possession organisée',atkT:'tw',defT:'tw',atkD:'Akram Afif le joueur le plus dangereux. Almoez Ali buteur référence.',defD:'Défense améliorée sous Lopetegui mais reste limitée physiquement.',styleD:'Possession organisée, pressing moyen. Lopetegui apporte de la structure.',str:'Lopetegui coach de qualité, Afif talent réel, qualifié via Asie.',weak:'Humiliés en 2022 (3 défaites). Niveau physique limité.',key:'Akram Afif (cap., ailier), Almoez Ali (9), Pedro Miguel (défenseur)'}
+  ],matches:[
+    {id:'b1',j:1,d:'12 juin · BMO Field, Toronto',h:'can',a:'bih',o:['1.90','3.40','4.00'],an:'Premier match du Canada à domicile en Mondial. Émotion maximale à Toronto. Davies côté gauche sera la menace principale. Bosnie physique et motivée. ⚠️ Davies potentiellement absent pour J1.',c:'Canada devrait s\'imposer. Bosnie peut surprendre. Match ouvert.',p:'1-0',sc:[65,117,125,60,23,17],strat:{score:'1-0 Canada',pts:65,risk:'low',txt:'Issue : victoire Canada (60%). Attention : sans Davies, ne pas s\'emballer sur 2-1. Le 1-0 est plus réaliste et sécurise l\'issue correcte. 65 pts dans la bonne issue.'}},
+    {id:'b2',j:1,d:'13 juin · Levi\'s Stadium, San Jose',h:'qat',a:'sui',o:['4.50','3.50','1.75'],an:'Suisse large favori. Qatar trop limité pour exister dans ce groupe. Xhaka et Akanji étouffent Afif.',c:'Suisse solide, contrôle le match. Qatar peut tenir un temps.',p:'0-2',sc:[172,141,33,6,7,87],strat:{score:'0-2 Suisse',pts:33,risk:'low',txt:'Issue : victoire Suisse (87%). 33 pts seulement car tout le monde le met. Score exact 0-2 cohérent. Peu de valeur à chercher ici — sécurise l\'issue.'}},
+    {id:'b3',j:2,d:'18 juin · BC Place, Vancouver',h:'sui',a:'bih',o:['1.80','3.40','4.20'],an:'Suisse la plus complète techniquement. Bosnie peut jouer en contre. Match crucial pour la 2e place.',c:'Suisse maîtrise le ballon. Score serré possible.',p:'1-0',sc:[76,108,134,76,19,5],strat:{score:'1-0 Mexique',pts:76,risk:'high',txt:'🔥 VALEUR MPP FORTE : seulement 10% sur victoire Mexique alors que la cote implique 62%. Le public a peur de l\'upset mais le Mexique à l\'Azteca reste largement favori. Grosse différenciation possible si Mexique gagne.'}},
+    {id:'b4',j:2,d:'18 juin · Lumen Field, Seattle',h:'can',a:'qat',o:['1.55','3.70','6.00'],an:'Canada doit gagner pour espérer la qualification. Qatar sans solution contre pressing canadien.',c:'Canada s\'impose nettement. Davies crée le danger constant.',p:'3-0',sc:[71,104,148,78,16,6],strat:{score:'3-0 Canada',pts:71,risk:'low',txt:'✅ CONFIRMATION : 78% sur Canada, cote implique 65%. Légèrement surjoué mais Qatar est vraiment faible. Score 3-0 ambitieux — si juste, avantage sur score exact.'}},
+    {id:'b5',j:3,d:'24 juin · BC Place, Vancouver',h:'sui',a:'can',o:['2.10','3.30','3.50'],an:'Finale de groupe pour la 1ère place. Suisse expérimentée mais Canada à domicile.',c:'Le match le plus ouvert du groupe. Canada peut créer la surprise.',p:'1-1',sc:[68,106,129,54,38,8],strat:{score:'1-1 nul',pts:106,risk:'low',txt:'✅ CONFIRMATION : 38% sur nul, cote implique 30%. Légèrement surjoué mais Suisse-Canada en finale de groupe = match serré logique. Notre analyse confirme.'}},
+    {id:'b6',j:3,d:'24 juin · Lumen Field, Seattle',h:'bih',a:'qat',o:['1.85','3.30','4.50'],an:'Bosnie a besoin des 3 pts pour espérer. Qatar pour l\'honneur.',c:'Bosnie s\'impose. Qatar peu à offrir.',p:'2-0',sc:[87,102,120,56,33,11],strat:{score:'2-0 Bosnie',pts:87,risk:'low',txt:'✅ CONFIRMATION : 56% sur Bosnie, cote implique 54%. Parfaitement calibré. Issue solide.'}}
+  ]},
+  C:{teams:[
+    {c:'bra',fl:'🇧🇷',n:'Brésil',rk:'#5',atk:90,def:72,tmp:75,agg:70,coach:'Ancelotti · 4-3-3',style:'Jeu offensif créatif',atkT:'tg',defT:'tb',atkD:'Vinicius Jr (Real Madrid, meilleur joueur du monde), Raphinha (Barça), Rodrygo. Attaque parmi les 3 meilleures.',defD:'Militão et Marquinhos en charnière. Défense solide mais a souffert en qualifs.',styleD:'Jeu offensif créatif sous Ancelotti, plus équilibré. Transitions rapides, technique supérieure.',str:'Ancelotti, Vinicius au sommet, profondeur d\'effectif exceptionnelle, 5 fois champion.',weak:'A perdu vs Argentine, Colombie, Uruguay en qualifs. Pression médiatique énorme.',key:'Vinicius Jr (gauche · Real Madrid ⭐CL), Raphinha (droit · Barcelona ⭐CL), Casemiro (Man Utd, PL), Marquinhos (PSG ⭐CL)'},
+    {c:'mar',fl:'🇲🇦',n:'Maroc',rk:'#14',atk:62,def:82,tmp:58,agg:65,coach:'Regragui · 4-3-3 / 5-4-1',style:'Défensif-contre',atkT:'ts',defT:'tg',atkD:'Hakimi (PSG) l\'arme principale. Ziyech créatif. En Youssef inconsistant.',defD:'La meilleure défense d\'Afrique. Demi-finaliste 2022 (6 buts en 7 matchs).',styleD:'Bloc bas très organisé, contre-attaque rapide. Hakimi décisif en transition.',str:'Demi-finaliste 2022, défense d\'acier, Hakimi décisif, Regragui tactique de haut niveau.',weak:'Manque de titularité offensive. Ziyech inconsistant.',key:'Achraf Hakimi (cap. · PSG ⭐CL), Hakim Ziyech (milieu offensif · Galatasaray ⭐CL), Sofyan Amrabat (Fiorentina, Serie A)'},
+    {c:'sco',fl:'🏴󠁧󠁢󠁳󠁣󠁴󠁿',n:'Écosse',rk:'#39',atk:55,def:62,tmp:68,agg:72,coach:'Clarke · 4-3-3',style:'Direct et physique',atkT:'ts',defT:'ts',atkD:'McTominay créatif du milieu. Che Adams et Shankland en attaque — physiques mais niveau mondial limité.',defD:'Défense organisée mais pas hermétique.',styleD:'Jeu direct, physique, pressing moyen. Forte mentalité. 1er Mondial depuis 1998.',str:'Motivation énorme (28 ans d\'attente), McTominay (Man Utd), supporters les plus fervents.',weak:'Groupe très difficile (Brésil, Maroc). Peu d\'espoir de qualification réaliste.',key:'Scott McTominay (Napoli ⭐CL), Andy Robertson (Liverpool ⭐CL), Che Adams (9 · Southampton, PL)'},
+    {c:'hai',fl:'🇭🇹',n:'Haïti',rk:'#83',atk:38,def:50,tmp:55,agg:60,coach:'Varrault · 4-4-2',style:'Compact / survie',atkT:'tw',defT:'tw',atkD:'Duckens Nazon le plus dangereux. Peu de création collective.',defD:'Bloc organisé par nécessité mais niveau insuffisant.',styleD:'Compact, survie organisée. 1er Mondial depuis 1974.',str:'1ère participation depuis 1974, Nazon peut surprendre, rien à perdre.',weak:'FIFA #83, niveau très inférieur aux 3 autres équipes.',key:'Duckens Nazon (attaquant), Frantzdy Pierrot (milieu), Josué Duverger (gardien)'}
+  ],matches:[
+    {id:'c1',j:1,d:'13 juin · MetLife, East Rutherford',h:'bra',a:'mar',o:['1.60','3.70','5.50'],an:'Choc du groupe dès J1. Vinicius vs Hakimi — duel de stars PSG/Real. Brésil favori mais Maroc = meilleure défense d\'Afrique. Match tactique.',c:'Brésil favori mais Maroc peut surprendre. Match pas forcément prolifique.',p:'2-1',sc:[55,122,140,50,31,19],strat:{score:'2-1 Brésil',pts:55,risk:'mid',txt:'⚠️ VALEUR MPP CORRECTE : 50% sur Brésil, cote implique 62%. Notre prono est dans la bonne direction — le Brésil est plus probable que ce que les joueurs pensent (50/50 alors que la cote dit 62%). Solide.'}},
+    {id:'c2',j:1,d:'13 juin · Gillette, Foxboro',h:'hai',a:'sco',o:['4.00','3.30','1.85'],an:'Match entre les deux équipes qui veulent éviter la dernière place. Écosse légère favorite. Haïti joue pour l\'histoire.',c:'Écosse devrait s\'imposer. McTominay décisif.',p:'0-2',sc:[154,131,44,4,9,87],strat:{score:'0-2 Écosse',pts:44,risk:'low',txt:'Issue : victoire Écosse (87%). Sécurise l\'issue correcte.'}},
+    {id:'c3',j:2,d:'19 juin · Gillette, Foxboro',h:'sco',a:'mar',o:['4.20','3.40','1.80'],an:'Écosse doit gagner pour espérer. Maroc défend bas et contre. Bloc marocain très difficile à percer.',c:'Maroc trop fort défensivement. 0-0 ou 1-0 Maroc probable.',p:'0-1',sc:[99,112,91,7,24,69],strat:{score:'0-1 Maroc',pts:91,risk:'low',txt:'✅ CONFIRMATION : 69% sur Maroc, cote implique 56%. Légèrement surjoué — mais défense marocaine impressionnante. Issue solide.'}},
+    {id:'c4',j:2,d:'19 juin · Lincoln Financial, Phila.',h:'bra',a:'hai',o:['1.15','7.00','22.0'],an:'Brésil face à la plus faible du groupe. Ancelotti aligne son meilleur 11. Vinicius, Raphinha, Rodrygo vs Haïti.',c:'Victoire brésilienne large attendue.',p:'4-0',sc:[21,167,198,97,2,1],strat:{score:'4-0 Brésil',pts:21,risk:'high',txt:'🔥 OPPORTUNITÉ : 97% victoire Brésil = seulement 21 pts sur l\'issue. Score exact différenciant = avantage MASSIF. Mets 4-0.'}},
+    {id:'c5',j:3,d:'24 juin · Hard Rock, Miami',h:'sco',a:'bra',o:['7.00','4.50','1.35'],an:'Écosse probablement éliminée. Brésil peut gérer mais alignera son 11 fort.',c:'Brésil gère. Écosse peut accrocher un but.',p:'0-2',sc:[145,124,48,4,8,88],strat:{score:'0-2 Brésil',pts:48,risk:'low',txt:'✅ CONFIRMATION : 88% sur Brésil, cote implique 74%. Surjoué mais Brésil est clairement supérieur à l\'Écosse.'}},
+    {id:'c6',j:3,d:'24 juin · Mercedes-Benz, Atlanta',h:'mar',a:'hai',o:['1.30','5.50','12.0'],an:'Maroc valide sa qualification. Haïti pour l\'honneur.',c:'Maroc s\'impose. Hakimi + bloc solide trop fort.',p:'2-0',sc:[29,159,187,95,3,2],strat:{score:'3-0 Maroc',pts:29,risk:'low',txt:'✅ CONFIRMATION : 95% sur Maroc, cote implique 77%. Surjoué — focus sur score exact 3-0 pour différenciation.'}}
+  ]},
+  D:{teams:[
+    {c:'usa',fl:'🇺🇸',n:'États-Unis',rk:'#16',atk:70,def:68,tmp:72,agg:70,coach:'Berhalter · 4-3-3',style:'Pressing / transition',atkT:'tg',defT:'tb',atkD:'Pulisic (AC Milan) danger principal. Weah, Reyna. Jeune équipe avec éclairs de talent.',defD:'Turner (Arsenal). Défense correcte mais peut souffrir contre équipes techniques.',styleD:'Pressing haut, transitions, énergie et physique. Co-hôte : public américain.',str:'Co-hôte, Pulisic en grande forme, génération la plus talentueuse de l\'histoire US.',weak:'Inconsistance dans les grands matchs. Dépendance à Pulisic.',key:'Christian Pulisic (cap. · AC Milan, Serie A), Tyler Adams (Bournemouth, PL), Matt Turner (gardien · Crystal Palace, PL)'},
+    {c:'tur',fl:'🇹🇷',n:'Turquie',rk:'#27',atk:72,def:68,tmp:68,agg:72,coach:'Montella · 4-2-3-1',style:'Direct et physique',atkT:'tg',defT:'tb',atkD:'Arda Güler (Real Madrid, prodige 19 ans) — le joueur le plus excitant. Calhanoglu pilier.',defD:'Bloc solide sous Montella. Physique et organisé.',styleD:'Direct, physique, pressing moyen-haut. Güler apporte la créativité.',str:'Arda Güler (meilleur espoir 2025), Calhanoglu (Inter), Euro 2024 QF, mentalité guerrière.',weak:'Montella limité tactiquement. Défense vulnérable aux transitions rapides.',key:'Arda Güler (Real Madrid ⭐CL), Hakan Calhanoglu (Inter ⭐CL), Kerem Aktürkoglu (Benfica ⭐CL)'},
+    {c:'par',fl:'🇵🇾',n:'Paraguay',rk:'#62',atk:52,def:65,tmp:55,agg:62,coach:'Osorio · 4-4-2',style:'Défensif / compact',atkT:'tw',defT:'tb',atkD:'Miguel Almirón (Newcastle) pièce maîtresse. Sanabria en pointe. Peu de création collective.',defD:'Bloc compact, organisé, dur à briser. Tradition paraguayenne.',styleD:'Compact bas, attend et contre via Almirón.',str:'Almirón (Newcastle) créatif, solide défensivement, difficile à battre.',weak:'Trop limité offensivement pour inquiéter USA ou Turquie.',key:'Miguel Almirón (Newcastle ⭐CL), Omar Alderete (défenseur), Antony Silva (gardien)'},
+    {c:'aus',fl:'🇦🇺',n:'Australie',rk:'#23',atk:58,def:62,tmp:65,agg:68,coach:'Arnold · 4-3-3',style:'Pressing physique',atkT:'ts',defT:'ts',atkD:'Mitchell Duke en 9. Martin Boyle sur les ailes. Athlétique et physique.',defD:'Compact, organisé, difficile à bouger. A atteint les 8es en 2022.',styleD:'Pressing physique, jeu direct, mentalité combative.',str:'8es en 2022, Mathew Ryan gardien fiable, mentalité combative.',weak:'Moins de talent individuel que USA et Turquie.',key:'Mathew Ryan (gardien), Aziz Behich (gauche), Mitchell Duke (9)'}
+  ],matches:[
+    {id:'d1',j:1,d:'12 juin · SoFi Stadium, Los Angeles',h:'usa',a:'par',o:['1.55','3.80','6.00'],an:'USA co-hôte avec 70k supporters à Los Angeles. Paraguay défend bas et contre via Almirón. Pulisic surveillé.',c:'USA s\'impose à domicile. Paraguay défend mais manque d\'ambition offensive.',p:'2-0',sc:[74,113,115,63,21,16],strat:{score:'2-0 USA',pts:74,risk:'low',txt:'✅ CONFIRMATION : 63% sur USA, cote implique 65%. Parfaitement calibré. Issue solide avec bonne valeur.'}},
+    {id:'d2',j:1,d:'13 juin · BC Place, Vancouver',h:'aus',a:'tur',o:['3.30','3.30','2.20'],an:'Arda Güler peut faire la différence. Australie physique mais Turquie a plus de talent.',c:'Turquie légèrement favorite. Güler décisif.',p:'1-2',sc:[126,115,66,9,23,68],strat:{score:'1-2 Turquie',pts:66,risk:'low',txt:'✅ CONFIRMATION : 68% sur Turquie, cote implique 45%. Assez surjoué — mais Güler peut faire la différence. Conviction forte, on garde.'}},
+    {id:'d3',j:2,d:'19 juin · Lumen Field, Seattle',h:'usa',a:'aus',o:['1.65','3.50','5.50'],an:'USA quasi qualifiés si victoire J1. Australie peut contre-attaquer. Pulisic + Weah créent les décalages.',c:'USA s\'impose. Australie peut accrocher.',p:'2-1',sc:[58,119,153,67,24,9],strat:{score:'2-1 USA',pts:58,risk:'low',txt:'✅ CONFIRMATION : 67% sur USA, cote implique 61%. Légèrement surjoué — conviction solide.'}},
+    {id:'d4',j:2,d:'19 juin · Levi\'s Stadium, San Jose',h:'tur',a:'par',o:['1.75','3.40','4.50'],an:'Turquie doit gagner. Güler peut tout débloquer. Paraguay défend bas.',c:'Turquie gagne mais Paraguay résiste longtemps.',p:'1-0',sc:[84,113,126,59,30,11],strat:{score:'1-0 Turquie',pts:84,risk:'low',txt:'Issue : victoire Turquie (59%). Güler peut débloquer. 84 pts sur le 1-0 correct.'}},
+    {id:'d5',j:3,d:'25 juin · SoFi Stadium, Los Angeles',h:'tur',a:'usa',o:['3.20','3.20','2.20'],an:'Choc pour la 1ère place. Güler vs Pulisic — affiche alléchante. Deux équipes qualifiées.',c:'Match très ouvert. Güler peut basculer n\'importe quel match.',p:'1-1',sc:[109,102,93,33,42,25],strat:{score:'1-1 nul',pts:102,risk:'low',txt:'✅ CONFIRMATION : 42% sur nul, cote implique 31%. Légèrement surjoué — mais Turquie vs USA en J3 est vraiment ouvert. Notre analyse dit nul.'}},
+    {id:'d6',j:3,d:'25 juin · BC Place, Vancouver',h:'par',a:'aus',o:['2.80','3.20','2.70'],an:'Deux équipes probablement éliminées. Almirón peut se libérer.',c:'Match nul probable — deux équipes défensives sans enjeu majeur.',p:'1-1',sc:[74,104,131,53,33,14],strat:{score:'1-1 nul',pts:104,risk:'low',txt:'✅ CONFIRMATION : 33% sur nul, cote implique 31%. Parfaitement calibré. Deux équipes défensives sans enjeu — le nul est logique.'}}
+  ]},
+  E:{teams:[
+    {c:'ger',fl:'🇩🇪',n:'Allemagne',rk:'#9',atk:82,def:75,tmp:75,agg:72,coach:'Nagelsmann · 4-2-3-1',style:'Pressing haut / possession',atkT:'tg',defT:'tb',atkD:'Florian Wirtz (Leverkusen/Bayern, meilleur talent du moment). Havertz en 9, Musiala.',defD:'Süle et Tah en défense. Neuer (38 ans) dans les buts. Bloc solide.',styleD:'Pressing haut intense, possession organisée. Nagelsmann a rebuild l\'équipe.',str:'Wirtz le meilleur joueur U23 du monde. Profondeur d\'effectif, 4x champion, Euro 2024 QF.',weak:'Sorti en poule en 2018 et 2022 — trauma. Neuer vieillissant.',key:'Florian Wirtz (Bayern Munich ⭐CL), Kai Havertz (Arsenal ⭐CL), Joshua Kimmich (Bayern Munich ⭐CL)'},
+    {c:'ecu',fl:'🇪🇨',n:'Équateur',rk:'#23',atk:62,def:72,tmp:60,agg:65,coach:'Sánchez · 4-3-3',style:'Défensif / compact',atkT:'ts',defT:'tb',atkD:'Enner Valencia (capitaine, légende). Gonzalo Plata créatif. Attaque correcte mais limitée.',defD:'Défense de qualité, compact, difficile à briser. A atteint les 8es en 2006.',styleD:'Compact défensif, contre-attaque. Spécialiste du 1-0.',str:'Bloc défensif solide, Valencia expérimenté, qualifié aisément en CONMEBOL.',weak:'Peu de créativité offensive sans Valencia inspiré.',key:'Enner Valencia (cap., 9), Gonzalo Plata (ailier), Piero Hincapié'},
+    {c:'civ',fl:'🇨🇮',n:'Côte d\'Ivoire',rk:'#42',atk:65,def:60,tmp:68,agg:70,coach:'Emerse Faé · 4-3-3',style:'Technique offensif',atkT:'tg',defT:'tw',atkD:'Sébastien Haller (Dortmund, retour du cancer). Franck Kessié au milieu. Péan en pointe.',defD:'Défense moins solide que secteur offensif.',styleD:'Technique, offensif, énergie. Champions d\'Afrique 2023. A battu Mexique et Corée mars 2026.',str:'CAN 2023 champions, Haller (retour incroyable), Kessié, battu Mexique et Corée en mars 2026.',weak:'Défense fragile. Inconsistante hors Afrique.',key:'Sébastien Haller (9 · Dortmund ⭐CL), Franck Kessié (milieu · Juventus ⭐CL), Serge Aurier (retraité clubs)'},
+    {c:'cur',fl:'🇨🇼',n:'Curaçao',rk:'#82',atk:35,def:45,tmp:50,agg:55,coach:'Lodewijks · 4-4-2',style:'Survie',atkT:'tw',defT:'tw',atkD:'Leandro Bacuna le plus technique. Peu de ressources offensives.',defD:'Bloc organisé mais clairement inférieur à ce niveau.',styleD:'Survie organisée, bloque les espaces. Premier Mondial de l\'histoire.',str:'1er Mondial de l\'histoire (émotion), quelques joueurs européens, rien à perdre.',weak:'FIFA #82, clairement le moins fort du groupe.',key:'Leandro Bacuna (milieu), Cuco Martina (expérience), Jurien Gaari'}
+  ],matches:[
+    {id:'e1',j:1,d:'14 juin · NRG Stadium, Houston',h:'ger',a:'cur',o:['1.07','10.0','35.0'],an:'Allemagne face à Curaçao dans leur 1er match. Entrée en matière idéale pour Wirtz, Havertz face à FIFA #82.',c:'Victoire large de l\'Allemagne. Curaçao peut tenir un 1er quart d\'heure.',p:'5-0',sc:[15,179,222,97,2,1],strat:{score:'5-0 Allemagne',pts:15,risk:'low',txt:'✅ CONFIRMATION : 97% sur Allemagne, cote implique 93%. Bien calibré. Focus sur score exact 5-0 — si juste, énorme avantage.'}},
+    {id:'e2',j:1,d:'14 juin · Arrowhead, Kansas City',h:'civ',a:'ecu',o:['2.70','3.20','2.70'],an:'Affiche pour la 2e place. CIV en grande forme (battu Mexique et Corée). Équateur défensif mais solide.',c:'Match très ouvert entre deux équipes de niveau similaire.',p:'1-1',sc:[85,101,108,15,43,43],strat:{score:'1-1 nul',pts:101,risk:'low',txt:'✅ CONFIRMATION : 43% sur nul (ex-aequo avec Équateur), cote implique 31%. Légèrement surjoué — mais CIV vs Équateur est vraiment 50/50. Notre analyse confirme le nul.'}},
+    {id:'e3',j:2,d:'20 juin · BMO Field, Toronto',h:'ger',a:'civ',o:['1.55','3.70','6.00'],an:'Allemagne face à la surprise du groupe. CIV peut poser des problèmes en contre mais Wirtz et Havertz supérieurs.',c:'Allemagne s\'impose mais CIV peut marquer.',p:'2-1',sc:[38,137,164,81,13,6],strat:{score:'2-1 Allemagne',pts:38,risk:'low',txt:'✅ CONFIRMATION : 81% sur Allemagne, cote implique 65%. Assez surjoué — mais Allemagne nettement supérieure. Conviction forte.'}},
+    {id:'e4',j:2,d:'20 juin · Arrowhead, Kansas City',h:'ecu',a:'cur',o:['1.40','4.20','9.00'],an:'Équateur doit gagner pour espérer. Curaçao tente de survire.',c:'Équateur s\'impose aisément.',p:'3-0',sc:[41,143,168,85,12,3],strat:{score:'3-0 Équateur',pts:41,risk:'low',txt:'✅ CONFIRMATION : 85% sur Équateur, cote implique 71%. Légèrement surjoué — mais Curaçao est vraiment faible.'}},
+    {id:'e5',j:3,d:'25 juin · MetLife, East Rutherford',h:'ecu',a:'ger',o:['5.50','4.00','1.45'],an:'Équateur qualifié ou proche. Allemagne pour finir 1er.',c:'Allemagne trop forte. Wirtz décisif.',p:'0-2',sc:[145,129,42,4,12,84],strat:{score:'0-2 Allemagne',pts:42,risk:'low',txt:'Issue : victoire Allemagne (84%). Sécurise l\'issue correcte avec 0-2.'}},
+    {id:'e6',j:3,d:'25 juin · Lincoln Financial, Phila.',h:'cur',a:'civ',o:['8.00','4.50','1.35'],an:'CIV pour valider qualification. Curaçao pour l\'honneur dans son 1er Mondial.',c:'CIV s\'impose nettement.',p:'0-3',sc:[163,118,53,3,7,90],strat:{score:'0-3 CIV',pts:53,risk:'low',txt:'✅ CONFIRMATION : 90% sur CIV, cote implique 74%. Assez surjoué — focus sur score exact 0-3.'}}
+  ]},
+  F:{teams:[
+    {c:'ned',fl:'🇳🇱',n:'Pays-Bas',rk:'#8',atk:80,def:72,tmp:70,agg:68,coach:'Koeman · 4-3-3',style:'Pressing / technique',atkT:'tg',defT:'tb',atkD:'Cody Gakpo (Liverpool), Donyell Malen, Memphis Depay. Attaque vitesse et technique.',defD:'Van Dijk (cap.) présence physique. De Ligt solide. Très bon bloc.',styleD:'Pressing organisé, technique hollandaise, possession + verticalité.',str:'Van Dijk (Liverpool), Gakpo en forme, De Jong au milieu, QF Euro 2024.',weak:'Malen inconsistant. Koeman sous pression.',key:'Virgil van Dijk (cap. · Liverpool ⭐CL), Cody Gakpo (Liverpool ⭐CL), Frenkie de Jong (Barcelona ⭐CL)'},
+    {c:'jpn',fl:'🇯🇵',n:'Japon',rk:'#17',atk:72,def:68,tmp:78,agg:75,coach:'Moriyasu · 4-2-3-1',style:'Pressing haut / vertical',atkT:'tg',defT:'tb',atkD:'Takumi Minamino, Ritsu Doan, Kaoru Mitoma — tous joueurs de Premier League ou top Europe.',defD:'Bloc très compact, organisé. A battu Espagne et Allemagne en 2022.',styleD:'Pressing haut intense, transitions ultra-rapides, collectif parfait.',str:'A battu Espagne + Allemagne en 2022, tous en Europe, pressing collectif parfait.',weak:'Physiquement moins imposant. Peut souffrir dans les matchs de gestion.',key:'Kaoru Mitoma (Brighton, PL), Takumi Minamino (Monaco ⭐CL), Wataru Endo (Liverpool ⭐CL)'},
+    {c:'swe',fl:'🇸🇪',n:'Suède',rk:'#30',atk:70,def:65,tmp:62,agg:65,coach:'Andersson · 4-4-2',style:'Direct / physique',atkT:'tg',defT:'ts',atkD:'Alexander Isak (Newcastle) et Viktor Gyökeres (Sporting/Arsenal) — duo de buteurs de classe mondiale.',defD:'Bloc correct mais pas exceptionnel.',styleD:'Physique et direct. Long ball pour Isak et Gyökeres. Moins technique mais dangereuse.',str:'Isak + Gyökeres = duo buteur parmi les plus redoutables du tournoi.',weak:'Dépend trop du duo offensif. Défense fragile.',key:'Viktor Gyökeres (Arsenal ⭐CL), Alexander Isak (Newcastle ⭐CL), Emil Forsberg (Leipzig, Bundesliga)'},
+    {c:'tun',fl:'🇹🇳',n:'Tunisie',rk:'#36',atk:45,def:60,tmp:52,agg:58,coach:'Jalel Kadri · 4-3-3',style:'Défensif / compact',atkT:'tw',defT:'ts',atkD:'Youssef Msakni le plus créatif. Issam Jebali en pointe. Peu de ressources.',defD:'Bloc organisé mais limité contre les attaques de haut niveau.',styleD:'Compact défensif, contre-attaque quand possible.',str:'Qualifiée aisément, disciplinée, peut piéger une grande équipe.',weak:'Clairement la moins forte du groupe.',key:'Youssef Msakni (créatif), Issam Jebali (9), Montassar Talbi (défenseur)'}
+  ],matches:[
+    {id:'f1',j:1,d:'15 juin · AT&T Stadium, Dallas',h:'ned',a:'jpn',o:['1.90','3.40','4.00'],an:'Choc entre les deux favoris du groupe. Mitoma face à Van Dijk. Match très ouvert entre deux styles de pressing.',c:'Le match le plus excitant du groupe. Japon peut répéter ses exploits de 2022.',p:'1-1',sc:[74,115,113,61,25,14],strat:{score:'1-1 nul',pts:115,risk:'low',txt:'✅ CONFIRMATION : 25% sur nul, cote implique 29%. Bien calibré — légèrement sous-joué même! Notre analyse confirme le nul entre deux équipes de pressing.'}},
+    {id:'f2',j:1,d:'20 juin · Estadio Jalisco, Guadalajara',h:'swe',a:'tun',o:['1.85','3.50','4.00'],an:'Suède large favorite avec Isak + Gyökeres face à une Tunisie défensive.',c:'Suède s\'impose grâce au duo offensif. Tunisie tient un temps.',p:'2-0',sc:[122,110,72,11,27,62],strat:{score:'0-2 Suède',pts:122,risk:'mid',txt:'Issue : victoire Suède (62%). Seulement 11% ont mis Tunisie (122 pts) — trop risqué. Le 0-2 Suède est moins joué que 0-1 et reflète la puissance d\'Isak+Gyökeres.'}},
+    {id:'f3',j:2,d:'20 juin · NRG Stadium, Houston',h:'ned',a:'swe',o:['1.75','3.40','4.50'],an:'Van Dijk face à Isak/Gyökeres — duel aérien intense. Les deux équipes attaquent.',c:'Pays-Bas avec plus de contrôle mais Suède dangereuse.',p:'2-1',sc:[67,122,131,65,28,7],strat:{score:'2-1 Pays-Bas',pts:67,risk:'low',txt:'✅ CONFIRMATION : 65% sur Pays-Bas, cote implique 57%. Légèrement surjoué — Van Dijk face à Isak/Gyökeres. Conviction correcte.'}},
+    {id:'f4',j:2,d:'20 juin · Estadio Jalisco, Guadalajara',h:'tun',a:'jpn',o:['5.00','3.80','1.55'],an:'Japon doit gagner pour gérer la qualification. Tunisie défend bas.',c:'Japon s\'impose. Mitoma et Doan trop rapides.',p:'0-2',sc:[118,103,91,15,29,56],strat:{score:'0-2 Japon',pts:91,risk:'mid',txt:'⚠️ VALEUR MPP CORRECTE : 56% sur Japon, cote implique 64%. Notre prono est aligné avec la probabilité réelle — peu de différenciation mais l\'issue est solide.'}},
+    {id:'f5',j:3,d:'25 juin · AT&T Stadium, Dallas',h:'jpn',a:'swe',o:['2.60','3.20','2.80'],an:'Très probablement pour la 1ère place. Japon pressing vs Suède physique.',c:'Match très ouvert. Légère faveur Japon.',p:'2-1',sc:[96,108,111,32,48,20],strat:{score:'2-1 Japon',pts:96,risk:'mid',txt:'⚠️ VALEUR MPP CORRECTE : 32% sur Japon, cote implique 38%. Le nul est surjoué à 48%. Notre analyse dit légère faveur Japon — bonne valeur si le Japon gagne.'}},
+    {id:'f6',j:3,d:'25 juin · Estadio Jalisco, Guadalajara',h:'tun',a:'ned',o:['8.00','5.00','1.30'],an:'Pays-Bas pour valider 1ère ou 2e place. Tunisie pour l\'honneur.',c:'Pays-Bas s\'impose confortablement.',p:'0-3',sc:[131,123,56,5,14,81],strat:{score:'0-3 Pays-Bas',pts:56,risk:'low',txt:'Issue : victoire Pays-Bas (81%). Sécurise l\'issue avec 0-3 — Pays-Bas peut scorer large vs Tunisie.'}}
+  ]},
+  G:{teams:[
+    {c:'bel',fl:'🇧🇪',n:'Belgique',rk:'#3',atk:78,def:70,tmp:68,agg:68,coach:'Tedesco · 4-3-3',style:'Technique / offensif',atkT:'tg',defT:'tb',atkD:'De Bruyne (cap., Man City) — meilleur milieu offensif du monde. Lukaku (Roma) en 9. Doku créatif.',defD:'Trossard, Vertonghen (expérience). Défense solide.',styleD:'Technique offensif, De Bruyne organise tout.',str:'De Bruyne au sommet, Lukaku buteur référence, FIFA #3.',weak:'La "génération dorée" n\'a jamais gagné. Pression énorme.',key:'Kevin De Bruyne (cap. · Man City ⭐CL), Romelu Lukaku (9 · Roma, Serie A), Loïs Openda (Leipzig, Bundesliga)'},
+    {c:'egy',fl:'🇪🇬',n:'Égypte',rk:'#35',atk:65,def:65,tmp:62,agg:65,coach:'Koller · 4-2-3-1',style:'Mohamed Salah dépendant',atkT:'tg',defT:'ts',atkD:'Mohamed Salah (Liverpool) — joueur de classe mondiale. Tout passe par lui.',defD:'Bloc organisé mais dépendant de l\'humeur collective.',styleD:'Tout passe par Salah. Quand il s\'exprime, l\'Égypte peut battre n\'importe qui.',str:'Salah — peut transformer un match seul.',weak:'TOUT dépend de Salah. Sans lui, équipe très ordinaire.',key:'Mohamed Salah (cap. · Liverpool ⭐CL), Mohamed El-Shenawy (gardien), Trézéguet (Trabzonspor)'},
+    {c:'irn',fl:'🇮🇷',n:'Iran',rk:'#20',atk:52,def:72,tmp:55,agg:60,coach:'Queiroz · 4-2-3-1',style:'Défensif / compact',atkT:'tw',defT:'tg',atkD:'Sardar Azmoun (Roma) meilleur buteur. Mehdi Taremi (Inter). Deux joueurs de top Europe.',defD:'Bloc défensif extrêmement organisé sous Queiroz. Difficile à briser.',styleD:'Ultra-défensif, compact, attend les erreurs. Queiroz spécialiste des blocs bas.',str:'Queiroz expérimenté, Azmoun + Taremi qualité réelle, défense très solide.',weak:'Très limité offensivement collectivement. Pression politique externe.',key:'Mehdi Taremi (9 · Inter ⭐CL), Sardar Azmoun (Roma, Serie A), Ehsan Hajsafi (cap. · Olympiacos ⭐CL)'},
+    {c:'nzl',fl:'🇳🇿',n:'Nouvelle-Zélande',rk:'#94',atk:40,def:50,tmp:55,agg:60,coach:'Hay · 4-4-2',style:'Physique / survie',atkT:'tw',defT:'tw',atkD:'Chris Wood (Nottingham Forest) — seul joueur de top niveau.',defD:'Bloc compact par nécessité. Physique mais clairement inférieur.',styleD:'Long ball vers Wood, bloque les espaces, survie.',str:'Wood (Forest) peut marquer sur un coup isolé, rien à perdre.',weak:'FIFA #94, groupe très dur.',key:'Chris Wood (9 · Nottm Forest, PL), Winston Reid (défenseur), Joe Bell (milieu)'}
+  ],matches:[
+    {id:'g1',j:1,d:'15 juin · Lumen Field, Seattle',h:'bel',a:'egy',o:['1.75','3.50','4.50'],an:'Le choc du groupe. De Bruyne face à Salah. Belgique favorite mais si Salah s\'exprime, l\'Égypte peut surprendre.',c:'Belgique devrait s\'imposer grâce à De Bruyne. Salah peut changer le match.',p:'2-1',sc:[57,122,135,79,15,6],strat:{score:'2-1 Belgique',pts:57,risk:'low',txt:'Issue : victoire Belgique (79%). De Bruyne peut faire la différence. 2-1 si Salah répond présent pour l\'Égypte.'}},
+    {id:'g2',j:1,d:'15 juin · SoFi Stadium, Los Angeles',h:'irn',a:'nzl',o:['1.60','3.80','5.50'],an:'Iran large favori. Taremi et Azmoun face à la défense néo-zélandaise.',c:'Iran s\'impose confortablement. Taremi marque.',p:'2-0',sc:[63,116,130,36,44,20],strat:{score:'2-0 Iran',pts:130,risk:'high',txt:'🔥 VALEUR MPP BONNE : 36% sur victoire Iran mais la cote implique 62%. Le nul est surjoué (44%). L\'Iran sous Queiroz est solide défensivement — les joueurs sous-estiment leur capacité à gérer ce match.'}},
+    {id:'g3',j:2,d:'21 juin · SoFi Stadium, Los Angeles',h:'bel',a:'irn',o:['1.55','3.70','6.00'],an:'Belgique favorite mais Iran peut frustrer De Bruyne avec son bloc bas. Queiroz spécialiste.',c:'Belgique s\'impose mais l\'Iran rend la tâche difficile.',p:'1-0',sc:[39,138,171,93,5,2],strat:{score:'1-0 Belgique',pts:39,risk:'low',txt:'Issue : victoire Belgique (93%). Peu de valeur différenciante. Sécurise l\'issue.'}},
+    {id:'g4',j:2,d:'21 juin · BC Place, Vancouver',h:'nzl',a:'egy',o:['6.00','4.50','1.45'],an:'Égypte doit gagner. Salah face à la défense néo-zélandaise — peut marquer à volonté.',c:'Égypte s\'impose. Salah décisif.',p:'0-3',sc:[148,116,59,10,20,71],strat:{score:'0-3 Égypte',pts:59,risk:'low',txt:'✅ CONFIRMATION : 71% sur Égypte, cote implique 69%. Parfaitement calibré. Salah face à NZL.'}},
+    {id:'g5',j:3,d:'26 juin · BC Place, Vancouver',h:'nzl',a:'bel',o:['12.0','7.00','1.20'],an:'Belgique qualifiée, joue pour la 1ère place.',c:'Belgique s\'impose largement.',p:'0-4',sc:[172,129,32,3,5,92],strat:{score:'0-4 Belgique',pts:32,risk:'low',txt:'✅ CONFIRMATION : 92% sur Belgique, cote implique 83%. Assez surjoué — focus sur score exact 0-4 pour différenciation.'}},
+    {id:'g6',j:3,d:'26 juin · Lumen Field, Seattle',h:'egy',a:'irn',o:['2.50','3.20','2.90'],an:'Match pour la 2e place. Salah vs défense iranienne. Queiroz spécialiste de ce type de match.',c:'L\'un des matchs les plus tactiques du groupe. Salah peut faire la différence.',p:'1-0',sc:[85,114,123,65,29,6],strat:{score:'1-0 Égypte',pts:85,risk:'low',txt:'✅ CONFIRMATION : 65% sur Égypte, cote implique 40%. Très surjoué — mais Salah peut faire la différence seul. Conviction forte sur l\'issue.'}}
+  ]},
+  H:{teams:[
+    {c:'esp',fl:'🇪🇸',n:'Espagne',rk:'#1',atk:88,def:80,tmp:78,agg:72,coach:'De la Fuente · 4-3-3',style:'Possession / géométrie',atkT:'tg',defT:'tg',atkD:'Lamine Yamal (17 ans, Barça) — meilleur joueur du monde actuellement. Pedri, Morata, Olmo. L\'attaque la plus technique du tournoi.',defD:'Carvajal, Le Normand, Laporte, Cucurella. Champions d\'Europe 2024. Bloc très solide.',styleD:'Possession pure, géométrie parfaite, pressing après perte ultra-intense.',str:'Champions d\'Europe 2024, Yamal probable meilleur joueur du tournoi, Pedri-Rodri au sommet.',weak:'Peut être stérile si l\'adversaire refuse de jouer. Morata pas assez régulier.',key:'Lamine Yamal (Barcelona ⭐CL), Pedri (Barcelona ⭐CL), Rodri (Man City ⭐CL)'},
+    {c:'uru',fl:'🇺🇾',n:'Uruguay',rk:'#18',atk:68,def:72,tmp:62,agg:72,coach:'Bielsa · 4-3-3',style:'Pression / guerrier',atkT:'ts',defT:'tb',atkD:'Darwin Núñez (Liverpool), Facundo Torres, Bentancur. Attaque directe et physique.',defD:'Bloc solide sous Bielsa. Araujo (Barça) excellent.',styleD:'Bielsa = pressing intense, jeu direct, physique, 100% engagement.',str:'Bielsa (coach le plus innovant), Núñez (Liverpool) explosif, Araujo solide.',weak:'Trop physique, peut manquer de technique vs Espagne. Núñez inconsistant.',key:'Darwin Núñez (9 · Liverpool ⭐CL), Ronald Araujo (Barcelona ⭐CL), Rodrigo Bentancur (Tottenham ⭐CL)'},
+    {c:'cpv',fl:'🇨🇻',n:'Cap-Vert',rk:'#68',atk:48,def:58,tmp:58,agg:65,coach:'Pedro Brito · 4-3-3',style:'Compact / organisé',atkT:'tw',defT:'ts',atkD:'Ryan Mendes le plus dangereux. Quelques joueurs évoluant en Europe.',defD:'Bloc organisé, physique.',styleD:'Compact et organisé. Peut poser des problèmes aux équipes qui ne jouent pas sérieusement.',str:'Histoire incroyable de qualification, joueurs évoluant dans les meilleures ligues.',weak:'Clairement insuffisant pour battre Espagne ou Uruguay.',key:'Ryan Mendes (ailier), Garry Rodrigues (gauche), Roberto Lopes'},
+    {c:'ksa',fl:'🇸🇦',n:'Arabie Saoudite',rk:'#56',atk:52,def:58,tmp:58,agg:62,coach:'Nouveau coach · 4-3-3',style:'Direct / physique',atkT:'tw',defT:'ts',atkD:'Saleh Al-Shehri et Salem Al-Dawsari. Ont battu l\'Argentine en 2022.',defD:'Bloc compact mais limité contre le top européen.',styleD:'Direct, physique, peut créer des surprises.',str:'A battu l\'Argentine en 2022, Al-Dawsari peut faire la différence.',weak:'Entraîneur changé 56 jours avant J1. Groupe très difficile.',key:'Salem Al-Dawsari (ailier), Saleh Al-Shehri (9), Mohammed Al-Owais (gardien)'}
+  ],matches:[
+    {id:'h1',j:1,d:'15 juin · Mercedes-Benz, Atlanta',h:'esp',a:'cpv',o:['1.18','7.00','18.0'],an:'Espagne ouvre contre le Cap-Vert. Yamal, Pedri, Morata contre un bloc très bas.',c:'Espagne s\'impose largement. Cap-Vert peut tenir plus longtemps que prévu.',p:'3-0',sc:[16,166,217,98,2,1],strat:{score:'3-0 Espagne',pts:16,risk:'low',txt:'✅ CONFIRMATION : 98% sur Espagne, cote implique 85%. Très surjoué — mais Espagne vs Cap-Vert est inévitable. Focus sur score exact.'}},
+    {id:'h2',j:1,d:'15 juin · Hard Rock, Miami',h:'ksa',a:'uru',o:['4.50','3.30','1.75'],an:'Arabie Saoudite sans coach stable vs Uruguay de Bielsa. Núñez face à défense KSA.',c:'Uruguay s\'impose grâce au pressing de Bielsa et Núñez.',p:'1-2',sc:[146,125,50,6,14,80],strat:{score:'1-2 Uruguay',pts:50,risk:'low',txt:'✅ CONFIRMATION : 80% sur Uruguay, cote implique 57%. Assez surjoué — mais Bielsa + Núñez face à une KSA sans coach stable. Conviction forte.'}},
+    {id:'h3',j:2,d:'21 juin · Mercedes-Benz, Atlanta',h:'esp',a:'ksa',o:['1.22','6.50','14.0'],an:'Espagne quasi certaine de se qualifier. KSA a surpris l\'Argentine en 2022.',c:'Espagne domine. Yamal fait la différence.',p:'3-0',sc:[31,139,176,97,2,1],strat:{score:'3-0 Espagne',pts:31,risk:'low',txt:'✅ CONFIRMATION : 97% sur Espagne, cote implique 82%. Très surjoué — focus sur score exact.'}},
+    {id:'h4',j:2,d:'21 juin · Hard Rock, Miami',h:'uru',a:'cpv',o:['1.50','3.80','7.00'],an:'Uruguay doit gagner pour valider. Cap-Vert défend bas. Bielsa attaque haut.',c:'Uruguay s\'impose via la pression.',p:'2-0',sc:[72,109,137,87,10,3],strat:{score:'2-0 Uruguay',pts:72,risk:'low',txt:'✅ CONFIRMATION : 87% sur Uruguay, cote implique 67%. Assez surjoué — mais Bielsa face au Cap-Vert est logique.'}},
+    {id:'h5',j:3,d:'26 juin · Estadio Akron, Guadalajara',h:'uru',a:'esp',o:['5.00','3.50','1.60'],an:'Choc pour la 1ère place. Bielsa vs De la Fuente.',c:'Espagne légère favorite mais Uruguay peut créer la surprise.',p:'1-1',sc:[143,112,57,3,14,83],strat:{score:'1-1 nul',pts:112,risk:'mid',txt:'⚠️ VALEUR MPP INTÉRESSANTE : 14% seulement sur le nul, cote implique 29%. Bielsa vs De la Fuente = match serré probable. Si nul, tu te différencies bien des 83% qui ont mis Espagne.'}},
+    {id:'h6',j:3,d:'26 juin · NRG Stadium, Houston',h:'cpv',a:'ksa',o:['3.00','3.20','2.40'],an:'Match pour le meilleur 3e possible.',c:'Match très ouvert.',p:'1-1',sc:[99,123,94,14,55,31],strat:{score:'1-1 nul',pts:123,risk:'low',txt:'✅ CONFIRMATION : 55% sur nul, cote implique 31%. Très surjoué — mais Cap-Vert vs KSA sans enjeu = match nul logique. On assume l\'issue populaire.'}}
+  ]},
+  I:{teams:[
+    {c:'fra',fl:'🇫🇷',n:'France',rk:'#2',atk:90,def:82,tmp:72,agg:70,coach:'Deschamps · 4-3-3',style:'Contre-attaque rapide',atkT:'tg',defT:'tg',atkD:'Mbappé (Real Madrid) — meilleur ou 2e meilleur joueur du monde. Griezmann créatif, Thuram/Dembélé en soutien.',defD:'Konaté + Upamecano en charnière. Theo Hernandez gauche. Maignan dans les buts. Défense de classe mondiale.',styleD:'Contre-attaque ultra-rapide via Mbappé, peut aussi presser haut. Deschamps pragmatique.',str:'Mbappé (38 buts en 33 matchs Real), profondeur d\'effectif inégalée, Vainqueur 2018, Griezmann expérience.',weak:'A perdu vs Côte d\'Ivoire en amical (2-1) le 4 juin 2026. Deschamps parfois trop défensif.',key:'Kylian Mbappé (cap. · Real Madrid ⭐CL), Antoine Griezmann (Atlético ⭐CL), Aurélien Tchouaméni (Real Madrid ⭐CL)'},
+    {c:'sen',fl:'🇸🇳',n:'Sénégal',rk:'#21',atk:68,def:68,tmp:68,agg:70,coach:'Cissé · 4-3-3',style:'Physique / offensif',atkT:'tg',defT:'tb',atkD:'Sadio Mané (Al-Nassr), Ismaïla Sarr, Boulaye Dia. Attaque physique et technique.',defD:'Kalidou Koulibaly (Al-Hilal) en défense — physique dominant. Bloc solide.',styleD:'Physique et offensif, pressing moyen, peut jouer en contre ou en possession.',str:'Champions d\'Afrique, Mané expérience mondiale, Koulibaly solide.',weak:'Mané (32 ans) moins explosif. Dépendance à Mané.',key:'Sadio Mané (cap. · Al-Nassr, Saudi Pro), Kalidou Koulibaly (Al-Hilal, Saudi Pro), Ismaïla Sarr (Crystal Palace, PL)'},
+    {c:'nor',fl:'🇳🇴',n:'Norvège',rk:'#45',atk:72,def:60,tmp:65,agg:68,coach:'Ståle · 4-3-3',style:'Direct / Haaland',atkT:'tg',defT:'tw',atkD:'Erling Haaland (Manchester City) — meilleur attaquant pur du monde. Si Norvège va loin, Golden Boot possible.',defD:'Défense correcte mais pas hermétique. Peut souffrir vs équipes qui pressent haut.',styleD:'Long ball pour Haaland, jeu direct, physique. Tout construit autour de Haaland.',str:'Haaland — le plus grand danger du groupe. Un contre peut suffire.',weak:'Sans Haaland inspiré, très ordinaire. Défense fragile.',key:'Erling Haaland (9 · Man City ⭐CL), Martin Ødegaard (cap. · Arsenal ⭐CL), Alexander Sørloth (Atlético ⭐CL)'},
+    {c:'irq',fl:'🇮🇶',n:'Irak',rk:'#73',atk:38,def:52,tmp:50,agg:55,coach:'Jesús Casas · 4-4-2',style:'Survie / compact',atkT:'tw',defT:'tw',atkD:'Peu de ressources. Aymen Hussein le plus créatif. Retour en Mondial après 40 ans.',defD:'Bloc compact mais niveau insuffisant face aux attaques des 3 autres.',styleD:'Survie organisée, bloque les espaces. Rien à perdre.',str:'1er Mondial depuis 40 ans, peut créer une surprise sur un match.',weak:'Groupe très difficile. Niveau insuffisant.',key:'Aymen Hussein (cap., milieu offensif), Hussein Ali (9), Jalal Hassan (gardien)'}
+  ],matches:[
+    {id:'i1',j:1,d:'16 juin · MetLife, East Rutherford',h:'fra',a:'sen',o:['1.55','3.80','5.50'],an:'Choc du groupe dès J1. Mbappé face à Koulibaly. France favorite mais Sénégal peut poser des problèmes physiques.',c:'France s\'impose grâce à Mbappé mais Sénégal coriace.',p:'2-1',sc:[46,128,153,88,9,3],strat:{score:'2-1 France',pts:46,risk:'low',txt:'✅ CONFIRMATION : 88% sur France, cote implique 65%. Très surjoué — mais Mbappé face au Sénégal reste favori clair. Issue sécurisée.'}},
+    {id:'i2',j:1,d:'16 juin · Gillette, Foxboro',h:'irq',a:'nor',o:['6.00','4.50','1.40'],an:'Haaland face à la défense irakienne. Ça peut faire très mal.',c:'Norvège s\'impose largement. Haaland marque probablement 2 fois.',p:'0-3',sc:[178,144,30,2,6,92],strat:{score:'0-3 Norvège',pts:30,risk:'low',txt:'✅ CONFIRMATION : 92% sur Norvège, cote implique 71%. Assez surjoué — Haaland face à l\'Irak. Focus sur score exact 0-3.'}},
+    {id:'i3',j:2,d:'22 juin · Lincoln Financial, Phila.',h:'fra',a:'irq',o:['1.15','7.00','20.0'],an:'France face au plus faible du groupe. Deschamps aligne son meilleur 11.',c:'France s\'impose très largement.',p:'4-0',sc:[22,166,189,98,1,1],strat:{score:'4-0 France',pts:22,risk:'low',txt:'✅ CONFIRMATION : 98% sur France, cote implique 87%. Très surjoué — focus sur score exact 4-0 pour différenciation massive.'}},
+    {id:'i4',j:2,d:'22 juin · BMO Field, Toronto',h:'nor',a:'sen',o:['2.30','3.30','3.10'],an:'Choc pour la 2e place. Haaland vs Koulibaly. Sénégal peut contre-attaquer via Mané.',c:'Le match le plus ouvert pour la 2e place. Légère faveur Norvège.',p:'2-1',sc:[64,105,137,34,42,24],strat:{score:'2-1 Norvège',pts:64,risk:'mid',txt:'⚠️ VALEUR MPP CORRECTE : 34% sur Norvège, cote implique 43%. Haaland peut tout décider seul. Les joueurs sont indécis (42% nul) mais Haaland face au Sénégal = avantage Norvège.'}},
+    {id:'i5',j:3,d:'26 juin · Gillette, Foxboro',h:'nor',a:'fra',o:['5.50','3.80','1.50'],an:'France probablement déjà 1ère. Haaland peut créer la surprise. Deschamps gère.',c:'France favorisée même si Haaland est une menace constante.',p:'1-2',sc:[141,108,68,5,19,77],strat:{score:'1-2 France',pts:68,risk:'low',txt:'✅ CONFIRMATION : 77% sur France, cote implique 67%. Légèrement surjoué — France favorite même vs Haaland. Conviction solide.'}},
+    {id:'i6',j:3,d:'26 juin · BMO Field, Toronto',h:'sen',a:'irq',o:['1.50','3.80','6.50'],an:'Sénégal pour valider qualification. Irak pour l\'honneur.',c:'Sénégal s\'impose. Mané marque.',p:'2-0',sc:[54,115,149,91,6,2],strat:{score:'2-0 Sénégal',pts:54,risk:'low',txt:'Issue : victoire Sénégal (91%). Sécurise l\'issue. Mané pour marquer vs Irak.'}}
+  ]},
+  J:{teams:[
+    {c:'arg',fl:'🇦🇷',n:'Argentine',rk:'#4',atk:88,def:78,tmp:70,agg:72,coach:'Scaloni · 4-3-3',style:'Possession créatif',atkT:'tg',defT:'tg',atkD:'Lionel Messi (Inter Miami) — dernier Mondial probable. Julián Álvarez (Man City). Attaque de légende.',defD:'Romero + Lisandro Martínez. Emiliano Martínez dans les buts. Défense de classe mondiale.',styleD:'Possession créative autour de Messi, transitions rapides, Álvarez entre les lignes.',str:'Champions du Monde 2022, Messi en mode légende, Dibu Martínez, Romero.',weak:'Messi à 38 ans. Ont perdu vs Colombie, Uruguay en qualifs.',key:'Lionel Messi (cap. · Inter Miami, MLS), Julián Álvarez (Atlético ⭐CL), Emiliano Martínez (Aston Villa, PL)'},
+    {c:'aut',fl:'🇦🇹',n:'Autriche',rk:'#26',atk:68,def:68,tmp:68,agg:68,coach:'Rangnick · 4-2-3-1',style:'Pressing Rangnick',atkT:'tg',defT:'tb',atkD:'Marcel Sabitzer (Dortmund), Marko Arnautovic. Équipe collective bien organisée.',defD:'Bloc compact à la Rangnick — pressing haut, récupération rapide.',styleD:'Pressing intensif — tout le monde presse, récupération haute, contre-pression. QF Euro 2024.',str:'Rangnick = meilleur coach pour les Mondiaux depuis Bielsa. QF Euro 2024. Collectif.',weak:'Arnautovic inconsistant. Pas de star mondiale.',key:'Marcel Sabitzer (Dortmund ⭐CL), Marko Arnautovic (9 · Udinese, Serie A), David Alaba (Real Madrid ⭐CL)'},
+    {c:'dza',fl:'🇩🇿',n:'Algérie',rk:'#32',atk:62,def:65,tmp:60,agg:65,coach:'Belmadi · 4-3-3',style:'Technique / offensif',atkT:'ts',defT:'ts',atkD:'Houssem Aouar (Roma) créatif. Andy Delort en 9. Nouvelle génération post-Mahrez.',defD:'Bloc correct mais pas exceptionnel.',styleD:'Technique et offensif, joueurs de qualité en Europe. Champions d\'Afrique 2019.',str:'Aouar créatif, champions CAN 2019, qualification aisée CAF.',weak:'Sans Mahrez, créativité moins évidente. Groupe difficile.',key:'Houssem Aouar (Roma), Andy Delort (9), Rais M\'Bolhi (gardien)'},
+    {c:'jor',fl:'🇯🇴',n:'Jordanie',rk:'#71',atk:42,def:55,tmp:52,agg:55,coach:'Jamal Mahmoud · 4-4-2',style:'Compact / survie',atkT:'tw',defT:'ts',atkD:'Mohammad Abu Hannoud le plus dangereux. Peu de ressources.',defD:'Bloc organisé mais insuffisant face à l\'Argentine.',styleD:'Compact, survie. Finaliste CAN Asie 2023.',str:'Finaliste CAN Asie 2023, 1er Mondial de l\'histoire, esprit de groupe.',weak:'Groupe très difficile. Clairement le moins fort.',key:'Mohammad Abu Hannoud (cap.), Yazan Al-Naimat (9), Amer Shafi (gardien)'}
+  ],matches:[
+    {id:'j1',j:1,d:'16 juin · Arrowhead, Kansas City',h:'arg',a:'dza',o:['1.40','4.20','8.00'],an:'Messi face à l\'Algérie — dernier premier match de Messi en Mondial probablement.',c:'Argentine s\'impose grâce à Messi. Algérie peut surprendre via Aouar.',p:'2-0',sc:[43,129,159,80,14,6],strat:{score:'2-0 Argentine',pts:43,risk:'low',txt:'Issue : victoire Argentine (80%). Messi face à l\'Algérie — peut marquer 2 fois. 43 pts.'}},
+    {id:'j2',j:1,d:'17 juin · Levi\'s Stadium, San Jose',h:'aut',a:'jor',o:['1.55','3.80','6.00'],an:'Autriche face à la Jordanie. Sabitzer et Arnautovic face à un bloc bas.',c:'Autriche s\'impose grâce au pressing de Rangnick.',p:'3-0',sc:[38,136,163,85,12,3],strat:{score:'2-0 Argentine',pts:38,risk:'low',txt:'✅ CONFIRMATION : 80% sur Argentine, cote implique 71%. Légèrement surjoué — Messi en mode légende. Issue solide.'}},
+    {id:'j3',j:2,d:'22 juin · Arrowhead, Kansas City',h:'arg',a:'aut',o:['1.65','3.60','5.00'],an:'Choc de la 2e journée. Messi vs pressing de Rangnick — match tactique passionnant.',c:'Argentine favorite mais Autriche peut presser haut et créer des problèmes.',p:'2-1',sc:[63,105,132,85,12,3],strat:{score:'2-1 Argentine',pts:63,risk:'low',txt:'✅ CONFIRMATION : 85% sur Argentine, cote implique 61%. Assez surjoué — mais Rangnick peut compliquer. Score 2-1 réaliste.'}},
+    {id:'j4',j:2,d:'22 juin · AT&T Stadium, Dallas',h:'jor',a:'dza',o:['3.80','3.20','2.00'],an:'Match pour la 3e place. Algérie favorite avec Aouar.',c:'Algérie s\'impose via Aouar.',p:'0-1',sc:[152,139,67,4,13,83],strat:{score:'0-1 Algérie',pts:67,risk:'low',txt:'✅ CONFIRMATION : 83% sur Algérie, cote implique 50%. Très surjoué — mais Aouar face à la Jordanie reste logique.'}},
+    {id:'j5',j:3,d:'27 juin · AT&T Stadium, Dallas',h:'dza',a:'aut',o:['3.00','3.10','2.40'],an:'Match pour la 2e place. Autriche légèrement favorite.',c:'Match très ouvert. Autriche plus organisée.',p:'1-2',sc:[96,103,107,35,46,19],strat:{score:'1-2 Autriche',pts:107,risk:'mid',txt:'Issue très ouverte : nul 46%, Autriche 35%, Algérie 19%. Notre analyse dit Autriche — 107 pts très peu joué. Rangnick a l\'avantage tactique.'}},
+    {id:'j6',j:3,d:'27 juin · Levi\'s Stadium, San Jose',h:'jor',a:'arg',o:['12.0','8.00','1.15'],an:'Messi dernier match de groupe. Argentine déjà qualifiée.',c:'Argentine s\'impose. Messi peut marquer pour l\'histoire.',p:'0-3',sc:[165,145,32,2,3,95],strat:{score:'1-2 Autriche',pts:32,risk:'high',txt:'🔥 VALEUR MPP BONNE : seulement 19% sur victoire Autriche alors que la cote implique 42%. Rangnick face à l\'Algérie — les joueurs sous-estiment le pressing autrichien. Bonne valeur de différenciation.'}}
+  ]},
+  K:{teams:[
+    {c:'por',fl:'🇵🇹',n:'Portugal',rk:'#7',atk:85,def:75,tmp:70,agg:68,coach:'Martínez · 4-3-3',style:'Technique offensif',atkT:'tg',defT:'tb',atkD:'Cristiano Ronaldo (Al-Nassr, 39 ans) — dernier Mondial probable. Bernardo Silva, Bruno Fernandes, Vitinha.',defD:'Rúben Dias et Gonçalo Inácio. Rúben Dias = l\'un des meilleurs CB du monde.',styleD:'Technique offensif, possession, Ronaldo point de repère.',str:'Ronaldo en mode dernier Mondial (motivation max), Bernardo Silva classe mondiale, Rúben Dias.',weak:'Ronaldo (39 ans) peut être un problème de rythme. Dépendance affective à CR7.',key:'Cristiano Ronaldo (cap. · Al-Nassr, Saudi Pro), Bruno Fernandes (Man Utd, PL), Bernardo Silva (Man City ⭐CL)'},
+    {c:'col',fl:'🇨🇴',n:'Colombie',rk:'#12',atk:75,def:70,tmp:70,agg:70,coach:'Néstor Lorenzo · 4-3-3',style:'Technique / transition',atkT:'tg',defT:'tb',atkD:'James Rodríguez (Rayo, revenu en forme), Luís Díaz (Liverpool), Borré en 9.',defD:'Davinson Sánchez et Dávila. Bloc solide. A battu Mexique et France en amicaux mars 2026.',styleD:'Technique, offensif, transitions rapides via Díaz et James.',str:'A battu Mexique et France en mars 2026. James au sommet. Díaz excellent.',weak:'Sánchez inconsistant. Dépendance à James.',key:'James Rodríguez (Rayo Vallecano, La Liga), Luís Díaz (Liverpool ⭐CL), David Ospina/Vargas'},
+    {c:'cod',fl:'🇨🇩',n:'RD Congo',rk:'#48',atk:55,def:58,tmp:60,agg:65,coach:'Desabre · 4-3-3',style:'Physique / direct',atkT:'ts',defT:'ts',atkD:'Silas Wamangituka (Stuttgart) le plus dangereux. Boulaye Dia. Physique.',defD:'Bloc organisé mais clairement inférieur à Portugal et Colombie.',styleD:'Physique, direct, athlétique.',str:'Physique imposant, quelques joueurs de niveau européen.',weak:'Niveau insuffisant pour battre Portugal ou Colombie.',key:'Silas Wamangituka (Stuttgart, Bundesliga), Cédric Bakambu (cap. · Beşiktaş), Arthur Masuaku (Besiktas)'},
+    {c:'uzb',fl:'🇺🇿',n:'Ouzbékistan',rk:'#65',atk:45,def:55,tmp:55,agg:58,coach:'Katanec · 4-4-2',style:'Compact / survie',atkT:'tw',defT:'ts',atkD:'Eldor Shomurodov (Roma) le plus connu. Peu de ressources.',defD:'Bloc organisé mais insuffisant.',styleD:'Compact, physique, peut créer des surprises sur CPA. 1er Mondial.',str:'1er Mondial de l\'histoire, Shomurodov (Roma), rien à perdre.',weak:'FIFA #65, groupe très difficile.',key:'Eldor Shomurodov (9 · Roma, Serie A), Dostonbek Khamdamov, Otabek Shukurov (gardien)'}
+  ],matches:[
+    {id:'k1',j:1,d:'17 juin · NRG Stadium, Houston',h:'por',a:'cod',o:['1.35','4.50','9.00'],an:'Portugal ouvre face à la RDC. Ronaldo voudra marquer dès J1.',c:'Portugal s\'impose. Ronaldo marque probablement.',p:'3-0',sc:[34,140,170,96,3,1],strat:{score:'3-0 Portugal',pts:34,risk:'low',txt:'✅ CONFIRMATION : 96% sur Portugal, cote implique 74%. Très surjoué — Ronaldo J1, focus sur score exact.'}},
+    {id:'k2',j:1,d:'17 juin · Estadio Azteca, Mexico City',h:'uzb',a:'col',o:['5.50','3.80','1.50'],an:'Colombie face à l\'Ouzbékistan. James et Díaz face à un bloc compact.',c:'Colombie s\'impose. James et Díaz font la différence.',p:'0-2',sc:[157,130,44,3,7,90],strat:{score:'0-2 Colombie',pts:44,risk:'low',txt:'Issue : victoire Colombie (90%). James et Díaz trop forts pour l\'Ouzbékistan. 44 pts si 0-2 exact.'}},
+    {id:'k3',j:2,d:'23 juin · Lincoln Financial, Phila.',h:'por',a:'uzb',o:['1.25','6.00','12.0'],an:'Portugal face à l\'Ouzbékistan. Ronaldo pour marquer des buts de légende.',c:'Portugal s\'impose largement.',p:'4-0',sc:[24,154,173,97,2,1],strat:{score:'0-2 Colombie',pts:24,risk:'low',txt:'✅ CONFIRMATION : 90% sur Colombie, cote implique 67%. Assez surjoué — Díaz et James face à l\'Ouzbékistan.'}},
+    {id:'k4',j:2,d:'23 juin · Mercedes-Benz, Atlanta',h:'col',a:'cod',o:['1.85','3.30','4.00'],an:'RDC vs Colombie pour la 2e place. Díaz face au physique congolais.',c:'Colombie favorite mais RDC peut créer des problèmes.',p:'2-1',sc:[123,111,77,6,23,71],strat:{score:'4-0 Portugal',pts:77,risk:'low',txt:'✅ CONFIRMATION : 97% sur Portugal, cote implique 80%. Très surjoué — Ronaldo vs Ouzbékistan, focus sur score exact.'}},
+    {id:'k5',j:3,d:'27 juin · Hard Rock, Miami',h:'col',a:'por',o:['3.50','3.20','2.10'],an:'Match pour la 1ère place. Colombie a battu France et Mexique. Ronaldo mode dernier Mondial.',c:'Match de très haut niveau. Colombie peut surprendre.',p:'1-1',sc:[154,102,55,5,19,76],strat:{score:'1-1 nul',pts:102,risk:'mid',txt:'⚠️ VALEUR MPP INTÉRESSANTE : 19% sur nul, cote implique 31%. Colombie a battu la France — mais Portugal avec Ronaldo en mode adieu est imprévisible. Le nul te différencie bien des 76% sur Portugal.'}},
+    {id:'k6',j:3,d:'27 juin · Mercedes-Benz, Atlanta',h:'cod',a:'uzb',o:['1.90','3.40','4.00'],an:'Match pour éviter la dernière place. RDC légèrement favorite.',c:'RDC s\'impose grâce au physique.',p:'2-1',sc:[63,107,158,64,29,7],strat:{score:'2-1 RDC',pts:63,risk:'low',txt:'✅ CONFIRMATION : 64% sur RDC, cote implique 53%. Légèrement surjoué — conviction correcte.'}}
+  ]},
+  L:{teams:[
+    {c:'eng',fl:'🏴󠁧󠁢󠁥󠁮󠁧󠁿',n:'Angleterre',rk:'#6',atk:82,def:78,tmp:70,agg:70,coach:'Tuchel · 4-3-3',style:'Direct / physique',atkT:'tg',defT:'tg',atkD:'Harry Kane (Bayern Munich, 61 buts cette saison). Bellingham, Saka, Foden. Attaque de classe mondiale.',defD:'Pickford dans les buts. Alexander-Arnold, Stones, Maguire. Défense solide sous Tuchel.',styleD:'Tuchel a apporté structure défensive + verticalité. Kane = point de repère absolu.',str:'Kane au sommet (61 buts), Bellingham (Real Madrid) en forme, Tuchel elite, Saka excellent.',weak:'N\'a jamais gagné depuis 1966. Pression médiatique extrême.',key:'Harry Kane (cap. 9 · Bayern ⭐CL), Jude Bellingham (Real Madrid ⭐CL), Bukayo Saka (Arsenal ⭐CL)'},
+    {c:'cro',fl:'🇭🇷',n:'Croatie',rk:'#10',atk:70,def:72,tmp:65,agg:65,coach:'Dalic · 4-3-3',style:'Technique / possession',atkT:'ts',defT:'tb',atkD:'Modric (37 ans, dernier Mondial) — génie absolu. Kovacic, Gvardiol offensive. Kramaric en pointe.',defD:'Gvardiol (Man City) excellent. Livakovic dans les buts (héros 2022 aux pénos).',styleD:'Possession créatif autour de Modric, transitions propres. 3e en 2022.',str:'Modric (dernier Mondial probable), Livakovic (héros penaltys), Gvardiol (Man City).',weak:'Modric (37 ans) en déclin physique. Kramaric limité.',key:'Luka Modric (cap. · Real Madrid ⭐CL), Joško Gvardiol (Man City ⭐CL), Dominik Livaković (Dinamo Zagreb)'},
+    {c:'gha',fl:'🇬🇭',n:'Ghana',rk:'#60',atk:52,def:55,tmp:60,agg:65,coach:'Otto Addo · 4-3-3',style:'Direct / physique',atkT:'ts',defT:'ts',atkD:'Jordan Ayew et André Ayew (frères). Mohamed Kudus (West Ham) le plus talentueux.',defD:'Bloc organisé mais limité face aux attaques de haut niveau.',styleD:'Direct, physique, peut créer des surprises. Motivation forte.',str:'Kudus (West Ham) talent réel, frères Ayew expérience, esprit de corps.',weak:'Niveau insuffisant pour Angleterre ou Croatie.',key:'Mohammed Kudus (West Ham, PL), Jordan Ayew (Crystal Palace, PL), André Ayew (cap. · retraité)'},
+    {c:'pan',fl:'🇵🇦',n:'Panama',rk:'#79',atk:40,def:55,tmp:52,agg:58,coach:'Christiansen · 4-4-2',style:'Compact / survie',atkT:'tw',defT:'ts',atkD:'Édgar Bárcenas le plus technique. Peu de ressources.',defD:'Bloc compact physique.',styleD:'Survie organisée, compact, physique. 2e Mondial.',str:'2e Mondial, esprit collectif, difficile à battre.',weak:'Clairement insuffisant offensivement. Groupe très difficile.',key:'Édgar Bárcenas (ailier), Adalberto Carrasquilla (milieu), Orlando Mosquera'}
+  ],matches:[
+    {id:'l1',j:1,d:'17 juin · AT&T Stadium, Dallas',h:'eng',a:'cro',o:['1.65','3.50','5.00'],an:'Choc dès J1. Remake demi-finale 2018 (Croatie 2-1). Modric vs Bellingham — le duel du groupe.',c:'Angleterre légèrement favorite avec Tuchel et Kane. Modric peut retourner le match.',p:'2-1',sc:[59,119,133,57,35,8],strat:{score:'2-1 Angleterre',pts:59,risk:'low',txt:'✅ CONFIRMATION : 57% sur Angleterre, cote implique 61%. Bien calibré — légèrement sous-joué même! Conviction solide.'}},
+    {id:'l2',j:1,d:'17 juin · BMO Field, Toronto',h:'gha',a:'pan',o:['1.80','3.40','4.20'],an:'Ghana face à Panama pour éviter la dernière place. Kudus peut faire la différence.',c:'Ghana s\'impose grâce à Kudus.',p:'2-0',sc:[73,113,116,60,33,7],strat:{score:'2-0 Ghana',pts:73,risk:'low',txt:'✅ CONFIRMATION : 60% sur Ghana, cote implique 56%. Bien calibré. Issue solide.'}},
+    {id:'l3',j:2,d:'21 juin · MetLife, East Rutherford',h:'eng',a:'gha',o:['1.35','4.50','9.00'],an:'Angleterre quasi certaine de se qualifier. Kane + Saka ont trop de qualité.',c:'Angleterre s\'impose. Kane marque.',p:'3-1',sc:[44,127,162,89,9,3],strat:{score:'3-1 Angleterre',pts:44,risk:'low',txt:'✅ CONFIRMATION : 89% sur Angleterre, cote implique 74%. Assez surjoué — mais Kane + Saka trop forts pour Ghana. Focus score exact 3-1.'}},
+    {id:'l4',j:2,d:'21 juin · BMO Field, Toronto',h:'pan',a:'cro',o:['12.0','8.00','1.15'],an:'Croatie doit gagner pour espérer. Modric gère. Panama défend bas.',c:'Croatie s\'impose grâce à Modric.',p:'0-2',sc:[165,123,36,3,7,90],strat:{score:'2-0 Croatie',pts:36,risk:'high',txt:'🔥 VALEUR MPP ÉNORME : seulement 3% des joueurs sur Croatie alors que la cote implique 62% de probabilité! Tout le monde a inversé domicile/extérieur — la Croatie joue à \'domicile\' ici. Profite de cette erreur collective massive.'}},
+    {id:'l5',j:3,d:'27 juin · MetLife, East Rutherford',h:'pan',a:'eng',o:['12.0','8.00','1.15'],an:'Angleterre qualifiée face à Panama. Kane peut marquer des buts de légende.',c:'Angleterre s\'impose très largement.',p:'0-4',sc:[168,137,32,2,3,94],strat:{score:'0-4 Angleterre',pts:32,risk:'low',txt:'✅ CONFIRMATION : 94% sur Angleterre, cote implique 87%. Bien calibré. Focus sur score exact 0-4 — Kane peut marquer plusieurs fois.'}},
+    {id:'l6',j:3,d:'27 juin · Lincoln Financial, Phila.',h:'cro',a:'gha',o:['1.75','3.40','4.50'],an:'Croatie pour finir 2e. Modric pour son dernier match de groupe.',c:'Croatie s\'impose grâce à Modric.',p:'2-0',sc:[57,120,138,73,21,6],strat:{score:'2-0 Croatie',pts:57,risk:'low',txt:'✅ CONFIRMATION : 73% sur Croatie, cote implique 57%. Légèrement surjoué — Modric peut gérer ce match.'}}
+  ]}
+};
+
+const GL = ['A','B','C','D','E','F','G','H','I','J','K','L'];
+let curG = 'A';
+
+function nav(p, btn) {
+  document.querySelectorAll('.page').forEach(x => x.classList.remove('on'));
+  document.querySelectorAll('.nav-btn').forEach(x => x.classList.remove('active'));
+  document.getElementById('page-' + p).classList.add('on');
+  btn.classList.add('active');
+  if (p === 'mpp') { updateStats(); loadFavs(); updateFavRecap(); }
+  if (p === 'calendrier') buildCalendrier();
+  if (p === 'resultats') buildResultats();
+  if (p === 'match') buildMatch();
+}
+
+function buildCalendrier() {
+  // Collect all matches from all groups with their group key
+  const allMatches = [];
+  GL.forEach(g => {
+    GD[g].matches.forEach(m => {
+      allMatches.push({...m, grp: g});
+    });
+  });
+
+  // Parse date from d string like "11 juin · Azteca, Mexico City"
+  const monthMap = {janvier:1,février:2,mars:3,avril:4,mai:5,juin:6,juillet:7,août:8,septembre:9,octobre:10,novembre:11,décembre:12};
+  function parseDate(d) {
+    const m = d.match(/(\d+)\s+(\w+)/);
+    if (!m) return 0;
+    return parseInt(m[1]) + (monthMap[m[2]] || 0) * 100;
+  }
+
+  allMatches.sort((a, b) => {
+    const da = parseDate(a.d), db = parseDate(b.d);
+    if (da !== db) return da - db;
+    return a.id.localeCompare(b.id);
+  });
+
+  // Group by date
+  const byDate = {};
+  allMatches.forEach(m => {
+    const dateKey = m.d.split('·')[0].trim();
+    if (!byDate[dateKey]) byDate[dateKey] = [];
+    byDate[dateKey].push(m);
+  });
+
+  const riskColors = {
+    high: 'var(--amber-bg)',
+    mid: 'var(--blue-bg)',
+    low: 'var(--green-bg)'
+  };
+  const riskTextColors = {
+    high: 'var(--amber-text)',
+    mid: 'var(--blue-text)',
+    low: 'var(--green-text)'
+  };
+
+  let html = '';
+  Object.entries(byDate).forEach(([date, matches]) => {
+    const done = matches.filter(m => pronos[m.id]).length;
+    html += `<div style="margin-bottom:20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div style="font-size:15px;font-weight:600">📅 ${date}</div>
+        <div style="font-size:11px;color:var(--text2)">${done}/${matches.length} pronos</div>
+      </div>`;
+
+    matches.forEach(m => {
+      const h = getT(m.grp, m.h), a = getT(m.grp, m.a);
+      const p = pronos[m.id];
+      const venue = m.d.includes('·') ? m.d.split('·').slice(1).join('·').trim() : '';
+      const hasPrno = p !== undefined;
+      const riskC = m.strat ? riskColors[m.strat.risk] : 'var(--bg2)';
+      const riskTxt = m.strat ? riskTextColors[m.strat.risk] : 'var(--text2)';
+      const fireIcon = m.strat && m.strat.risk === 'high' ? '🔥 ' : '';
+
+      html += `<div onclick="goToMatch('${m.grp}','${m.id}')" style="background:var(--bg);border:.5px solid var(--border);border-radius:var(--rad-lg);padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:border-color .15s;display:flex;align-items:center;gap:12px" onmouseover="this.style.borderColor='var(--border2)'" onmouseout="this.style.borderColor='var(--border)'">
+        <!-- Groupe badge -->
+        <div style="background:var(--bg3);border-radius:var(--rad);padding:4px 8px;font-size:11px;font-weight:600;color:var(--text2);flex-shrink:0;text-align:center;min-width:28px">
+          ${m.grp}<br><span style="font-size:9px;font-weight:400">J${m.j}</span>
+        </div>
+        <!-- Teams & venue -->
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:center;gap:6px;font-size:14px;font-weight:500;flex-wrap:wrap">
+            <span>${h.fl} ${h.n}</span>
+            <span style="color:var(--text3);font-size:12px">vs</span>
+            <span>${a.n} ${a.fl}</span>
+          </div>
+          <div style="font-size:11px;color:var(--text2);margin-top:2px">${venue}</div>
+        </div>
+        <!-- Score conseillé -->
+        <div style="text-align:center;flex-shrink:0">
+          <div style="font-size:10px;color:var(--text2);margin-bottom:2px">Conseil</div>
+          <div style="font-size:13px;font-weight:600;color:var(--text2)">${m.p}</div>
+        </div>
+        <!-- Mon prono -->
+        <div style="text-align:center;flex-shrink:0;min-width:52px">
+          <div style="font-size:10px;color:var(--text2);margin-bottom:2px">Mon prono</div>
+          ${hasPrno
+            ? `<div style="font-size:13px;font-weight:700;color:var(--success)">${p.h}-${p.a}</div>`
+            : `<div style="font-size:11px;color:var(--text3);font-style:italic">—</div>`
+          }
+        </div>
+        <!-- Opportunité badge -->
+        ${m.strat && m.strat.risk !== 'low' ? `<div style="background:${riskC};color:${riskTxt};font-size:10px;font-weight:600;padding:3px 7px;border-radius:var(--rad);flex-shrink:0">${fireIcon}${m.strat.score}</div>` : ''}
+        <!-- Arrow -->
+        <div style="color:var(--text3);font-size:14px;flex-shrink:0">›</div>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+
+  document.getElementById('cal-content').innerHTML = html;
+}
+
+function goToMatch(grp, mid) {
+  // Navigate to the group, then to matches tab, then scroll to match
+  curG = grp;
+  // Switch to groupes page
+  document.querySelectorAll('.page').forEach(x => x.classList.remove('on'));
+  document.querySelectorAll('.nav-btn').forEach(x => x.classList.remove('active'));
+  document.getElementById('page-groupes').classList.add('on');
+  document.querySelector('.nav-btn').classList.add('active');
+  // Build group content
+  buildGrid();
+  renderGroup();
+  // Click matches tab
+  setTimeout(() => {
+    const matchBtn = document.querySelector(`#grp-content .sec-btn:nth-child(2)`);
+    if (matchBtn) matchBtn.click();
+    // Scroll to match
+    setTimeout(() => {
+      const el = document.getElementById('ph-' + mid);
+      if (el) el.closest('.mc').scrollIntoView({behavior:'smooth', block:'center'});
+    }, 100);
+  }, 50);
+}
+
+function buildGrid() {
+  document.getElementById('grp-grid').innerHTML = GL.map(g =>
+    `<button class="grp-btn${g===curG?' active':''}" onclick="selGroup('${g}',this)">
+      <div class="grp-letter">Groupe ${g}</div>
+      <div class="grp-teams">${GD[g].teams.map(t=>t.fl+' '+t.n).join('<br>')}</div>
+    </button>`
+  ).join('');
+}
+
+function selGroup(g, el) {
+  curG = g;
+  document.querySelectorAll('.grp-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderGroup();
+}
+
+function renderGroup() {
+  const gd = GD[curG];
+  document.getElementById('grp-content').innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+      <span style="font-size:18px;font-weight:700">Groupe ${curG}</span>
+      <div class="sec-nav">
+        <button class="sec-btn active" onclick="secTab('teams','${curG}',this)">Équipes</button>
+        <button class="sec-btn" onclick="secTab('matches','${curG}',this)">Matchs & pronos</button>
+        <button class="sec-btn" onclick="secTab('standing','${curG}',this)">Classement</button>
+      </div>
+    </div>
+    <div id="sec-teams-${curG}">
+      <div class="team-row">${gd.teams.map(t=>teamCard(t,curG)).join('')}</div>
+      <div id="tdet-${curG}"></div>
+    </div>
+    <div id="sec-matches-${curG}" style="display:none">${gd.matches.map(m=>matchCard(m,curG)).join('')}</div>
+    <div id="sec-standing-${curG}" style="display:none">${standingHTML(curG)}</div>
+  `;
+  restoreProno(curG);
+}
+
+function secTab(tab, g, btn) {
+  ['teams','matches','standing'].forEach(t => {
+    const el = document.getElementById(`sec-${t}-${g}`);
+    if (el) el.style.display = t===tab ? 'block' : 'none';
+  });
+  btn.closest('.sec-nav').querySelectorAll('.sec-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (tab === 'standing') refreshStanding(g);
+}
+
+function teamCard(t, g) {
+  return `<div class="tc" id="tc-${g}-${t.c}" onclick="showTeam('${g}','${t.c}')">
+    <div class="tc-head"><span class="tc-flag">${t.fl}</span><div><div class="tc-name">${t.n}</div><div class="tc-rank">FIFA ${t.rk}</div></div></div>
+    <div class="tc-tags"><span class="tag ${t.atkT}">Attaque</span><span class="tag ${t.defT}">Défense</span><span class="tag ts">${t.style}</span></div>
+  </div>`;
+}
+
+function bar(v, c) { return `<div class="meter-bar"><div class="mf ${c}" style="width:${v}%"></div></div>`; }
+
+function showTeam(g, tc) {
+  document.querySelectorAll(`#sec-teams-${g} .tc`).forEach(x => x.classList.remove('sel'));
+  const card = document.getElementById(`tc-${g}-${tc}`);
+  if (card) card.classList.add('sel');
+  const t = GD[g].teams.find(x => x.c===tc);
+  document.getElementById(`tdet-${g}`).innerHTML = `
+    <div class="tdetail">
+      <h3><span style="font-size:26px">${t.fl}</span>${t.n}<span class="tcoach">FIFA ${t.rk} · ${t.coach}</span></h3>
+      <div class="meter-row"><span class="meter-label">Attaque</span>${bar(t.atk,'mg')}<span style="font-size:11px;color:var(--text2);width:40px">${t.atk}/100</span></div>
+      <div class="meter-row"><span class="meter-label">Défense</span>${bar(t.def,'mb')}<span style="font-size:11px;color:var(--text2);width:40px">${t.def}/100</span></div>
+      <div class="meter-row"><span class="meter-label">Tempo</span>${bar(t.tmp,'mw')}<span style="font-size:11px;color:var(--text2);width:40px">${t.tmp}/100</span></div>
+      <div class="meter-row"><span class="meter-label">Agressivité</span>${bar(t.agg,'mr')}<span style="font-size:11px;color:var(--text2);width:40px">${t.agg}/100</span></div>
+      <div class="detail-grid">
+        <div class="db"><h4>⚔️ Attaque</h4><p>${t.atkD}</p></div>
+        <div class="db"><h4>🛡️ Défense</h4><p>${t.defD}</p></div>
+        <div class="db full"><h4>⚡ Style de jeu</h4><p>${t.styleD}</p></div>
+        <div class="db"><h4>✅ Points forts</h4><p>${t.str}</p></div>
+        <div class="db"><h4>⚠️ Points faibles</h4><p>${t.weak}</p></div>
+        <div class="db full"><h4>⭐ Joueurs clés</h4><p>${t.key}</p></div>
+      </div>
+    </div>`;
+}
+
+function getT(g, c) { return GD[g].teams.find(t => t.c===c); }
+
+function matchCard(m, g) {
+  const h = getT(g, m.h), a = getT(g, m.a);
+  // App scoring bar: [home_pts, draw_pts, away_pts, home_pct, draw_pct, away_pct]
+  const sc = m.sc || null;
+  let scoringHTML = '';
+  let stratHTML = '';
+  if (sc) {
+    const [hp, dp, ap, hpct, dpct, apct] = sc;
+    const bestPts = Math.max(hp, dp, ap);
+    const hcls = hp === bestPts ? 'style="font-weight:700;color:var(--amber-text)"' : '';
+    const dcls = dp === bestPts ? 'style="font-weight:700;color:var(--amber-text)"' : '';
+    const acls = ap === bestPts ? 'style="font-weight:700;color:var(--amber-text)"' : '';
+    scoringHTML = `
+    <div style="margin-bottom:10px">
+      <div style="font-size:11px;color:var(--text2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px">📱 Barème app (pts · % joueurs)</div>
+      <div style="display:flex;gap:6px">
+        <div class="op" style="background:var(--bg2)"><div class="ol">${h.n}</div><div class="ov" ${hcls}>${hp} pts</div><div style="font-size:10px;color:var(--text3)">${hpct}% joueurs</div></div>
+        <div class="op" style="background:var(--bg2)"><div class="ol">Nul</div><div class="ov" ${dcls}>${dp} pts</div><div style="font-size:10px;color:var(--text3)">${dpct}% joueurs</div></div>
+        <div class="op" style="background:var(--bg2)"><div class="ol">${a.n}</div><div class="ov" ${acls}>${ap} pts</div><div style="font-size:10px;color:var(--text3)">${apct}% joueurs</div></div>
+      </div>
+    </div>`;
+    // Strategic advice block
+    if (m.strat) {
+      const stratColor = m.strat.risk === 'high' ? 'var(--amber-bg)' : 'var(--blue-bg)';
+      const stratTextColor = m.strat.risk === 'high' ? 'var(--amber-text)' : 'var(--blue-text)';
+      stratHTML = `<div style="font-size:12px;background:${stratColor};color:${stratTextColor};padding:8px 12px;border-radius:var(--rad);margin-bottom:10px;line-height:1.6">
+        🎯 <strong>Stratégie MPP :</strong> ${m.strat.txt}<br>
+        <strong>Score optimal :</strong> ${m.strat.score} <span style="opacity:.7">(${m.strat.pts} pts si exact · issue prioritaire)</span>
+      </div>`;
+    }
+  }
+  return `<div class="mc">
+    <div class="mmeta">🗓️ Journée ${m.j} · ${m.d}</div>
+    <div class="mteams">
+      <div class="mt"><div class="mtn">${h.fl} ${h.n}</div><div class="mtr">FIFA ${h.rk}</div></div>
+      <div class="mvs">vs</div>
+      <div class="mt r"><div class="mtn">${a.n} ${a.fl}</div><div class="mtr">FIFA ${a.rk}</div></div>
+    </div>
+    <div class="odds-row">
+      <div class="op"><div class="ol">${h.n}</div><div class="ov">${m.o[0]}</div></div>
+      <div class="op"><div class="ol">Nul</div><div class="ov">${m.o[1]}</div></div>
+      <div class="op"><div class="ol">${a.n}</div><div class="ov">${m.o[2]}</div></div>
+    </div>
+    ${scoringHTML}
+    <div class="analysis">${m.an}</div>
+    <div class="conseil">💡 <strong>Conseil :</strong> ${m.c}<br>📊 <strong>Score suggéré :</strong> ${m.p}</div>
+    ${stratHTML}
+    <div class="prono-section">
+      <h4>✏️ Ton pronostic</h4>
+      <div class="pi">
+        <span class="pteam">${h.fl} ${h.n}</span>
+        <input type="number" min="0" max="20" id="ph-${m.id}" placeholder="0" oninput="onInput('${m.id}')">
+        <span class="psep">—</span>
+        <input type="number" min="0" max="20" id="pa-${m.id}" placeholder="0" oninput="onInput('${m.id}')">
+        <span class="pteam r">${a.n} ${a.fl}</span>
+      </div>
+      <button class="save-btn" onclick="save('${m.id}')">✓ Valider ce prono</button>
+      <div class="saved-ok" id="ok-${m.id}">✅ Prono enregistré !</div>
+    </div>
+  </div>`;
+}
+
+// Pronos initialisés directement — pas de dépendance au localStorage
+const DEFAULT_PRONOS = {"a1":{"h":2,"a":0},"a2":{"h":1,"a":1},"a3":{"h":2,"a":1},"a4":{"h":1,"a":0},"a5":{"h":0,"a":1},"a6":{"h":0,"a":2},"b1":{"h":1,"a":0},"b2":{"h":0,"a":2},"b3":{"h":1,"a":0},"b4":{"h":3,"a":0},"b5":{"h":1,"a":1},"b6":{"h":2,"a":0},"c1":{"h":2,"a":1},"c2":{"h":0,"a":2},"c3":{"h":0,"a":1},"c4":{"h":4,"a":0},"c5":{"h":0,"a":2},"c6":{"h":2,"a":0},"d1":{"h":2,"a":0},"d2":{"h":1,"a":2},"d3":{"h":2,"a":1},"d4":{"h":1,"a":0},"d5":{"h":1,"a":1},"d6":{"h":1,"a":1},"e1":{"h":5,"a":0},"e2":{"h":1,"a":1},"e3":{"h":2,"a":1},"e4":{"h":3,"a":0},"e5":{"h":0,"a":2},"e6":{"h":0,"a":3},"f1":{"h":1,"a":1},"f2":{"h":2,"a":0},"f3":{"h":2,"a":1},"f4":{"h":0,"a":2},"f5":{"h":2,"a":1},"f6":{"h":0,"a":3},"g1":{"h":2,"a":1},"g2":{"h":2,"a":0},"g3":{"h":1,"a":0},"g4":{"h":0,"a":3},"g5":{"h":0,"a":4},"g6":{"h":1,"a":0},"h1":{"h":3,"a":0},"h2":{"h":1,"a":2},"h3":{"h":3,"a":0},"h4":{"h":2,"a":0},"h5":{"h":1,"a":1},"h6":{"h":1,"a":1},"i1":{"h":2,"a":1},"i2":{"h":0,"a":3},"i3":{"h":4,"a":0},"i4":{"h":2,"a":1},"i5":{"h":1,"a":2},"i6":{"h":2,"a":0},"j1":{"h":2,"a":0},"j2":{"h":3,"a":0},"j3":{"h":2,"a":1},"j4":{"h":0,"a":1},"j5":{"h":1,"a":2},"j6":{"h":0,"a":3},"k1":{"h":3,"a":0},"k2":{"h":0,"a":2},"k3":{"h":4,"a":0},"k4":{"h":2,"a":1},"k5":{"h":1,"a":1},"k6":{"h":2,"a":1},"l1":{"h":2,"a":1},"l2":{"h":2,"a":0},"l3":{"h":3,"a":1},"l4":{"h":0,"a":2},"l5":{"h":0,"a":4},"l6":{"h":2,"a":0}};
+
+let pronos = Object.assign({}, DEFAULT_PRONOS);
+let favs = {};
+
+function saveToStorage() {
+  try { localStorage.setItem('mpp2026_pronos', JSON.stringify(pronos)); } catch(e) {}
+}
+
+function loadFromStorage() {
+  try {
+    const saved = localStorage.getItem('mpp2026_pronos');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      pronos = Object.assign({}, DEFAULT_PRONOS, parsed);
+    }
+    const savedFavs = localStorage.getItem('mpp2026_favs');
+    if (savedFavs) {
+      favs = JSON.parse(savedFavs);
+    } else {
+      // Defaults: France vainqueur, Kane Golden Boot
+      favs = { w: 'France 🇫🇷', r: '', g: 'Harry Kane 🏴󠁧󠁢󠁥󠁮󠁧󠁿', s: '' };
+    }
+  } catch(e) {
+    pronos = Object.assign({}, DEFAULT_PRONOS);
+    favs = { w: 'France 🇫🇷', r: '', g: 'Harry Kane 🏴󠁧󠁢󠁥󠁮󠁧󠁿', s: '' };
+  }
+}
+
+function onInput(mid) {
+  const h = document.getElementById('ph-'+mid), a = document.getElementById('pa-'+mid);
+  if (!h || !a) return;
+  // Auto-save as soon as both fields have a value (including 0)
+  if (h.value !== '' && a.value !== '') {
+    pronos[mid] = {h:parseInt(h.value), a:parseInt(a.value)};
+    saveToStorage();
+    // Show subtle inline confirmation
+    const ok = document.getElementById('ok-'+mid);
+    if (ok) {
+      ok.style.display = 'block';
+      clearTimeout(ok._t);
+      ok._t = setTimeout(() => ok.style.display = 'none', 1500);
+    }
+    updateStats();
+  }
+}
+
+function save(mid) {
+  // Button now just triggers the same onInput logic explicitly
+  onInput(mid);
+  const ok = document.getElementById('ok-'+mid);
+  if (ok) { ok.textContent = '✅ Enregistré !'; ok.style.display='block'; setTimeout(()=>ok.style.display='none', 2000); }
+}
+
+function restoreProno(g) {
+  GD[g].matches.forEach(m => {
+    const p = pronos[m.id]; if (!p) return;
+    const h = document.getElementById('ph-'+m.id), a = document.getElementById('pa-'+m.id);
+    if (h) h.value = p.h;
+    if (a) a.value = p.a;
+  });
+}
+
+function standingHTML(g) {
+  return `<p style="font-size:12px;color:var(--text2);margin-bottom:12px">Basé sur tes pronostics — se met à jour automatiquement.</p>
+  <table class="stt">
+    <thead><tr><th>Équipe</th><th>J</th><th>V</th><th>N</th><th>D</th><th>BP</th><th>BC</th><th>+/-</th><th>Pts</th></tr></thead>
+    <tbody id="stb-${g}"></tbody>
+  </table>
+  <div style="margin-top:12px;font-size:12px;color:var(--text2);display:flex;gap:16px;flex-wrap:wrap">
+    <span><span class="qi qg"></span>Qualifié direct (1er/2e)</span>
+    <span><span class="qi qy"></span>Possible meilleur 3e</span>
+    <span><span class="qi qr"></span>Éliminé</span>
+  </div>`;
+}
+
+function refreshStanding(g) {
+  const codes = GD[g].teams.map(t => t.c);
+  const s = {}; codes.forEach(c => s[c]={j:0,v:0,n:0,d:0,bp:0,bc:0,pts:0});
+  GD[g].matches.forEach(m => {
+    const p = pronos[m.id]; if (!p) return;
+    const h=p.h, a=p.a;
+    s[m.h].j++; s[m.a].j++;
+    s[m.h].bp+=h; s[m.h].bc+=a; s[m.a].bp+=a; s[m.a].bc+=h;
+    if(h>a){s[m.h].v++;s[m.h].pts+=3;s[m.a].d++;}
+    else if(h<a){s[m.a].v++;s[m.a].pts+=3;s[m.h].d++;}
+    else{s[m.h].n++;s[m.a].n++;s[m.h].pts++;s[m.a].pts++;}
+  });
+  const sorted = codes.slice().sort((a,b)=>s[b].pts!==s[a].pts?s[b].pts-s[a].pts:(s[b].bp-s[b].bc)-(s[a].bp-s[a].bc));
+  const body = document.getElementById('stb-'+g); if (!body) return;
+  body.innerHTML = sorted.map((c,i)=>{
+    const t=GD[g].teams.find(x=>x.c===c), st=s[c];
+    const qi=i<2?'qg':i===2?'qy':'qr';
+    const diff=st.bp-st.bc;
+    return `<tr><td><span class="qi ${qi}"></span>${t.fl} ${t.n}</td><td>${st.j}</td><td>${st.v}</td><td>${st.n}</td><td>${st.d}</td><td>${st.bp}</td><td>${st.bc}</td><td class="${diff>0?'pos-up':diff<0?'pos-dn':''}">${diff>0?'+':''}${diff}</td><td style="font-weight:700">${st.pts}</td></tr>`;
+  }).join('');
+}
+
+function saveAll() {
+  // Save current visible inputs first
+  GL.forEach(g => {
+    GD[g].matches.forEach(m => {
+      const h = document.getElementById('ph-' + m.id);
+      const a = document.getElementById('pa-' + m.id);
+      if (h && a && h.value !== '' && a.value !== '') {
+        pronos[m.id] = {h: parseInt(h.value), a: parseInt(a.value)};
+      }
+    });
+  });
+  saveToStorage();
+  updateStats();
+  // Show confirmation
+  const ok = document.getElementById('save-all-ok');
+  const btn = document.getElementById('save-all-btn');
+  ok.style.display = 'inline';
+  btn.style.opacity = '0.6';
+  setTimeout(() => {
+    ok.style.display = 'none';
+    btn.style.opacity = '1';
+  }, 2000);
+}
+
+// ---- MATCH DU SOIR ----
+const MATCH_DU_JOUR = {
+  updated: "Jeudi 11 juin 2026 — 17h00",
+  date: "Jeudi 11 juin · 21h00 Paris",
+  venue: "Estadio Azteca, Mexico City",
+  group: "Groupe A · Journée 1",
+  home: {flag:"🇲🇽", name:"Mexique", rank:"FIFA #15", coach:"Javier Aguirre"},
+  away: {flag:"🇿🇦", name:"Afrique du Sud", rank:"FIFA #60", coach:"Hugo Broos"},
+  odds: {h:"1.46", d:"4.05", a:"6.30", ou:"Under 2.5 (-148)"},
+  mpp: {hpct:83, dpct:9, apct:7},
+  xi_home: ["Ochoa","Sanchez","Montes","J.Alvarez","Gallardo","Gutierrez","Fidalgo","Pineda","Alvarado","Jimenez","Quinones"],
+  xi_away: ["Williams","Mudau","Mbokazi","Okon","Modiba","Mbatha","Sithole","Mokoena","Appollis","Foster","Moremi"],
+  conditions: [
+    "⛰️ Altitude 2 200m — avantage majeur Mexique, fatigue accrue pour la RSA",
+    "🌡️ 19% de risque chaleur impactante (>28°C) — match en soirée, modéré",
+    "🏟️ 80 000 spectateurs à guichets fermés — atmosphère électrique"
+  ],
+  form_home: [
+    "✅ 5-1 vs Serbie (4 juin) — Jiménez et Vasquez buteurs",
+    "✅ 3-0 vs Australie · ✅ 0-0 vs Belgique · ✅ 1-1 vs Portugal",
+    "Invaincu en 8 matchs · 6 clean sheets sur 7 derniers matchs"
+  ],
+  form_away: [
+    "1-0 vs Jamaïque · 0-0 vs Nicaragua (adversaires non qualifiés)",
+    "Sans victoire en 5 matchs en 2026",
+    "Qualifié en tête du groupe CAF — mais niveau des adversaires limité"
+  ],
+  key_factors: [
+    "🔑 Jiménez (45 buts internats) cherche son 1er but en Mondial — très motivé",
+    "🔑 Johan Vasquez : 3 buts lors de ses 3 dernières sorties — dangereux sur CPA",
+    "🔑 Ronwen Williams (gardien RSA) : peut tenir un long moment s\'il est en feu",
+    "🔑 Appollis (6 contributions en qualifs CAF) — danger principal en contre",
+    "🔑 Question Ochoa/Rangel dans les buts mexicains — à confirmer au coup d\'envoi",
+    "🔑 RSA entraîné à Pachuca (altitude similaire) — partiellement préparés"
+  ],
+  experts: [
+    {source:"FootballWhispers", pick:"2-0 Mexique", note:"BTTS Non favori — 5/6 victoires amicales Mexique à zéro encaissé"},
+    {source:"SportsLine (Green)", pick:"Under 2.5 buts", note:"6/7 derniers matchs Mexique = under 2.5"},
+    {source:"SportsGambler", pick:"Mexique -1.25", note:"Stats et contexte pointent vers victoire 2+ buts"},
+    {source:"FoxSports", pick:"Mexique facile", note:"RSA sans qualification depuis 3 tournois"},
+    {source:"CBSSports", pick:"Mexique -250 fav.", note:"Over/Under 2.5 : Under largement favori (-148)"}
+  ],
+  verdict: {
+    score: "2-0",
+    teams: "Mexique · Afrique du Sud",
+    text: "Consensus absolu des experts : victoire Mexique 2-0. L\'Under 2.5 est très favori (-148) — Williams peut tenir longtemps mais Jiménez finira par percer. La RSA n\'a ni les ressources offensives pour scorer, ni la défense suffisante pour résister 90 min à l\'Azteca sous pression. Vasquez sur CPA est une menace bonus.",
+    value: "83% des joueurs MPP ont mis victoire Mexique — peu de différenciation sur l\'issue. La valeur est dans le score exact : si tu as 2-0, tu te démarques des 1-0 et 3-0.",
+    keep: true
+  }
+};
+
+function buildMatch() {
+  const el = document.getElementById('match-content');
+  if (!el) return;
+  const m = MATCH_DU_JOUR;
+  const mid = findMatchId(m.home.name, m.away.name);
+  const prono = mid ? pronos[mid] : null;
+
+  let html = `<div class="mdj-updated">Dernière mise à jour : ${m.updated}</div>`;
+
+  // Header matchup
+  html += `<div class="mdj-header">
+    <div class="mdj-matchup">
+      <div class="mdj-team">
+        <span class="mdj-flag">${m.home.flag}</span>
+        <div class="mdj-name">${m.home.name}</div>
+        <div class="mdj-rank">${m.home.rank}</div>
+      </div>
+      <div class="mdj-vs">VS</div>
+      <div class="mdj-team">
+        <span class="mdj-flag">${m.away.flag}</span>
+        <div class="mdj-name">${m.away.name}</div>
+        <div class="mdj-rank">${m.away.rank}</div>
+      </div>
+    </div>
+    <div class="mdj-meta">
+      <span class="mdj-pill">🗓️ ${m.date}</span>
+      <span class="mdj-pill">📍 ${m.venue}</span>
+      <span class="mdj-pill">🏆 ${m.group}</span>
+    </div>
+    <div class="mdj-odds">
+      <div class="mdj-odd"><div class="mdj-odd-l">${m.home.name}</div><div class="mdj-odd-v">${m.odds.h}</div></div>
+      <div class="mdj-odd"><div class="mdj-odd-l">Nul</div><div class="mdj-odd-v">${m.odds.d}</div></div>
+      <div class="mdj-odd"><div class="mdj-odd-l">${m.away.name}</div><div class="mdj-odd-v">${m.odds.a}</div></div>
+      <div class="mdj-odd" style="background:var(--amber-bg)"><div class="mdj-odd-l" style="color:var(--amber-text)">Total buts</div><div class="mdj-odd-v" style="color:var(--amber-text);font-size:11px">${m.odds.ou}</div></div>
+    </div>
+    <div style="display:flex;gap:16px;margin-top:10px;font-size:12px;color:var(--text2)">
+      <span>% joueurs MPP → ${m.home.name} : <strong>${m.mpp.hpct}%</strong></span>
+      <span>Nul : <strong>${m.mpp.dpct}%</strong></span>
+      <span>${m.away.name} : <strong>${m.mpp.apct}%</strong></span>
+    </div>
+  </div>`;
+
+  // Verdict + prono
+  html += `<div class="mdj-verdict">
+    <h3>🎯 Verdict & conseil MPP</h3>
+    <p>${m.verdict.text}</p>
+    <p style="margin-top:8px;font-weight:600">⚡ Valeur MPP : ${m.verdict.value}</p>
+  </div>
+  <div class="mdj-prono-box">
+    <div style="font-size:12px;color:var(--text2);margin-bottom:4px">Score conseillé Claude</div>
+    <div class="mdj-score">${m.verdict.score}</div>
+    <div style="font-size:12px;color:var(--text2)">${m.verdict.teams}</div>
+    ${prono ? `<div style="margin-top:8px;font-size:13px;color:var(--text2)">Ton prono : <strong style="color:var(--text)">${prono.h}–${prono.a}</strong> ${(()=>{const s=m.verdict.score.split('-');const vh=parseInt(s[0]),va=parseInt(s[1]);return prono.h===vh&&prono.a===va?'✅ Identique au conseil':getIssue(prono.h,prono.a)===getIssue(vh,va)?'✅ Issue correcte':'⚠️ Issue différente';})()}</div>` : ''}
+  </div>`;
+
+  // Conditions
+  html += `<div class="mdj-section">🌤️ Conditions de jeu</div>
+  <div class="mdj-block"><ul>${m.conditions.map(c=>`<li>${c}</li>`).join('')}</ul></div>`;
+
+  // Lineups
+  html += `<div class="mdj-section">📋 Compositions probables</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+    <div class="mdj-block">
+      <h4>${m.home.flag} ${m.home.name} · ${m.home.coach}</h4>
+      <div class="mdj-xi">${m.xi_home.map(p=>`<span class="mdj-player">${p}</span>`).join('')}</div>
+    </div>
+    <div class="mdj-block">
+      <h4>${m.away.flag} ${m.away.name} · ${m.away.coach}</h4>
+      <div class="mdj-xi">${m.xi_away.map(p=>`<span class="mdj-player">${p}</span>`).join('')}</div>
+    </div>
+  </div>`;
+
+  // Form
+  html += `<div class="mdj-section">📈 Forme récente</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+    <div class="mdj-block"><h4>${m.home.flag} ${m.home.name}</h4><ul>${m.form_home.map(f=>`<li>${f}</li>`).join('')}</ul></div>
+    <div class="mdj-block"><h4>${m.away.flag} ${m.away.name}</h4><ul>${m.form_away.map(f=>`<li>${f}</li>`).join('')}</ul></div>
+  </div>`;
+
+  // Key factors
+  html += `<div class="mdj-section">🔑 Facteurs clés</div>
+  <div class="mdj-block"><ul>${m.key_factors.map(f=>`<li>${f}</li>`).join('')}</ul></div>`;
+
+  // Experts
+  html += `<div class="mdj-section">📰 Consensus des experts</div>
+  <div class="mdj-block">
+    <table style="width:100%;border-collapse:collapse;font-size:13px">
+      <thead><tr style="border-bottom:.5px solid var(--border)">
+        <th style="text-align:left;padding:5px 8px;font-size:11px;color:var(--text2);font-weight:500">Source</th>
+        <th style="text-align:left;padding:5px 8px;font-size:11px;color:var(--text2);font-weight:500">Prono</th>
+        <th style="text-align:left;padding:5px 8px;font-size:11px;color:var(--text2);font-weight:500">Argument</th>
+      </tr></thead>
+      <tbody>${m.experts.map(e=>`<tr style="border-bottom:.5px solid var(--border)">
+        <td style="padding:7px 8px;font-weight:600">${e.source}</td>
+        <td style="padding:7px 8px;color:var(--green-text);font-weight:600">${e.pick}</td>
+        <td style="padding:7px 8px;color:var(--text2)">${e.note}</td>
+      </tr>`).join('')}</tbody>
+    </table>
+  </div>`;
+
+  el.innerHTML = html;
+}
+
+function findMatchId(homeName, awayName) {
+  for (const g of GL) {
+    for (const m of GD[g].matches) {
+      const h = getT(g, m.h), a = getT(g, m.a);
+      if ((h.n === homeName && a.n === awayName) || (h.n === awayName && a.n === homeName)) return m.id;
+    }
+  }
+  return null;
+}
+
+// Format: mid -> {h: int, a: int}
+let realScores = {};
+
+function saveRealScores() {
+  try { localStorage.setItem('mpp2026_real', JSON.stringify(realScores)); } catch(e) {}
+}
+function loadRealScores() {
+  try {
+    const s = localStorage.getItem('mpp2026_real');
+    if (s) realScores = JSON.parse(s);
+  } catch(e) {}
+}
+
+function saveReal(mid) {
+  const h = document.getElementById('rh-' + mid);
+  const a = document.getElementById('ra-' + mid);
+  if (!h || !a || h.value === '' || a.value === '') return;
+  realScores[mid] = { h: parseInt(h.value), a: parseInt(a.value) };
+  saveRealScores();
+  buildResultats();
+  // Also refresh calendar if visible
+  if (document.getElementById('page-calendrier').classList.contains('on')) buildCalendrier();
+}
+
+function getIssue(h, a) {
+  if (h > a) return 'H';
+  if (h < a) return 'A';
+  return 'D';
+}
+
+function buildResultats() {
+  const el = document.getElementById('res-content');
+  if (!el) return;
+
+  // Collect all matches
+  const allMatches = [];
+  GL.forEach(g => GD[g].matches.forEach(m => allMatches.push({...m, grp: g})));
+
+  const played = allMatches.filter(m => realScores[m.id]);
+  const pending = allMatches.filter(m => !realScores[m.id]);
+
+  // Stats
+  let exactOk = 0, issueOk = 0, totalPlayed = played.length;
+  let realGoals = 0, pronoGoals = 0;
+  let claudeExact = 0, claudeIssue = 0;
+
+  played.forEach(m => {
+    const real = realScores[m.id];
+    const prono = pronos[m.id];
+    const suggested = parseSuggestedScore(m.p);
+
+    realGoals += real.h + real.a;
+    if (prono) {
+      pronoGoals += prono.h + prono.a;
+      if (prono.h === real.h && prono.a === real.a) exactOk++;
+      else if (getIssue(prono.h, prono.a) === getIssue(real.h, real.a)) issueOk++;
+    }
+    if (suggested) {
+      if (suggested.h === real.h && suggested.a === real.a) claudeExact++;
+      else if (getIssue(suggested.h, suggested.a) === getIssue(real.h, real.a)) claudeIssue++;
+    }
+  });
+
+  const issueTotal = exactOk + issueOk;
+  const pctExact = totalPlayed > 0 ? Math.round(exactOk / totalPlayed * 100) : 0;
+  const pctIssue = totalPlayed > 0 ? Math.round(issueTotal / totalPlayed * 100) : 0;
+  const avgReal = totalPlayed > 0 ? (realGoals / totalPlayed).toFixed(1) : '—';
+  const avgProno = totalPlayed > 0 ? (pronoGoals / totalPlayed).toFixed(1) : '—';
+
+  // Build insights
+  const insights = buildInsights(played, exactOk, issueOk, claudeExact, claudeIssue, totalPlayed, avgReal, avgProno);
+
+  let html = '';
+
+  // --- STATS BAR ---
+  html += `<div class="res-stat-grid">
+    <div class="res-stat">
+      <div class="res-stat-num" style="color:var(--green-text)">${exactOk}</div>
+      <div class="res-stat-lbl">Scores exacts</div>
+      <div class="res-stat-sub" style="color:var(--green-text)">${pctExact}% des matchs joués</div>
+    </div>
+    <div class="res-stat">
+      <div class="res-stat-num" style="color:var(--blue-text)">${issueTotal}</div>
+      <div class="res-stat-lbl">Issues correctes</div>
+      <div class="res-stat-sub" style="color:var(--blue-text)">${pctIssue}% des matchs joués</div>
+    </div>
+    <div class="res-stat">
+      <div class="res-stat-num">${avgReal}</div>
+      <div class="res-stat-lbl">Buts réels / match</div>
+      <div class="res-stat-sub" style="color:var(--text3)">Prévu : ${avgProno}</div>
+    </div>
+    <div class="res-stat">
+      <div class="res-stat-num">${totalPlayed}<span style="font-size:14px;color:var(--text2)">/${allMatches.length}</span></div>
+      <div class="res-stat-lbl">Matchs joués</div>
+      <div class="res-stat-sub" style="color:var(--text3)">${pending.length} à venir</div>
+    </div>
+  </div>`;
+
+  // --- INSIGHTS ---
+  if (insights.length > 0) {
+    html += `<div class="res-section-title">🧠 Analyse & conclusions</div>`;
+    insights.forEach(ins => {
+      html += `<div class="insight-card">
+        <h4>${ins.icon} ${ins.title}</h4>
+        <p>${ins.text}</p>
+      </div>`;
+    });
+  }
+
+  // --- MATCHES PLAYED ---
+  if (played.length > 0) {
+    html += `<div class="res-section-title">✅ Matchs joués (${played.length})</div>`;
+    played.forEach(m => html += resMatchRow(m, true));
+  }
+
+  // --- MATCHES PENDING ---
+  html += `<div class="res-section-title">⏳ Matchs à venir — Saisie des scores réels</div>
+  <p style="font-size:12px;color:var(--text2);margin-bottom:12px">Saisis le score réel après chaque match pour mettre à jour l'analyse.</p>`;
+  pending.forEach(m => html += resMatchRow(m, false));
+
+  el.innerHTML = html;
+}
+
+function parseSuggestedScore(p) {
+  if (!p) return null;
+  const parts = p.split('-');
+  if (parts.length !== 2) return null;
+  return { h: parseInt(parts[0]), a: parseInt(parts[1]) };
+}
+
+function resMatchRow(m, played) {
+  const h = getT(m.grp, m.h), a = getT(m.grp, m.a);
+  const prono = pronos[m.id];
+  const real = realScores[m.id];
+  const suggested = parseSuggestedScore(m.p);
+  const date = m.d.split('·')[0].trim();
+
+  let badge = '';
+  let pronoColor = 'var(--text2)';
+  if (played && real && prono) {
+    if (prono.h === real.h && prono.a === real.a) {
+      badge = '<span class="res-badge badge-exact">🎯 Score exact</span>';
+      pronoColor = 'var(--green-text)';
+    } else if (getIssue(prono.h, prono.a) === getIssue(real.h, real.a)) {
+      badge = '<span class="res-badge badge-issue">✅ Issue correcte</span>';
+      pronoColor = 'var(--blue-text)';
+    } else {
+      badge = '<span class="res-badge badge-miss">❌ Raté</span>';
+      pronoColor = 'var(--red-text)';
+    }
+  }
+
+  let claudeBadge = '';
+  if (played && real && suggested) {
+    if (suggested.h === real.h && suggested.a === real.a) {
+      claudeBadge = '<span style="font-size:10px;color:var(--green-text)">🎯 exact</span>';
+    } else if (getIssue(suggested.h, suggested.a) === getIssue(real.h, real.a)) {
+      claudeBadge = '<span style="font-size:10px;color:var(--blue-text)">✅ issue</span>';
+    } else {
+      claudeBadge = '<span style="font-size:10px;color:var(--red-text)">❌</span>';
+    }
+  }
+
+  return `<div class="res-match">
+    <div style="background:var(--bg3);border-radius:var(--rad);padding:3px 7px;font-size:11px;font-weight:600;color:var(--text2);flex-shrink:0">${m.grp}</div>
+    <div class="res-teams" style="flex:1;min-width:120px">
+      <div class="res-teams-name">${h.fl} ${h.n} vs ${a.n} ${a.fl}</div>
+      <div class="res-teams-date">${date}</div>
+    </div>
+    <div class="res-scores">
+      ${played && real ? `
+      <div class="res-score-box">
+        <div class="res-score-lbl">Réel</div>
+        <div class="res-score-val">${real.h}–${real.a}</div>
+      </div>` : ''}
+      ${prono ? `
+      <div class="res-score-box">
+        <div class="res-score-lbl">Ton prono</div>
+        <div class="res-score-val" style="color:${pronoColor}">${prono.h}–${prono.a}</div>
+      </div>` : ''}
+      ${suggested ? `
+      <div class="res-score-box">
+        <div class="res-score-lbl">Claude</div>
+        <div class="res-score-val" style="color:var(--text3)">${suggested.h}–${suggested.a}</div>
+        ${claudeBadge}
+      </div>` : ''}
+    </div>
+    ${badge}
+    ${!played ? `
+    <div style="display:flex;align-items:center;gap:5px;flex-shrink:0">
+      <input type="number" min="0" max="20" id="rh-${m.id}" placeholder="0" style="width:36px;text-align:center;font-size:13px;padding:4px;border:1.5px solid var(--border2);border-radius:var(--rad);background:var(--bg);color:var(--text);font-family:inherit">
+      <span style="color:var(--text3)">–</span>
+      <input type="number" min="0" max="20" id="ra-${m.id}" placeholder="0" style="width:36px;text-align:center;font-size:13px;padding:4px;border:1.5px solid var(--border2);border-radius:var(--rad);background:var(--bg);color:var(--text);font-family:inherit">
+      <button onclick="saveReal('${m.id}')" style="padding:4px 10px;font-size:12px;background:var(--bg2);border:.5px solid var(--border2);border-radius:var(--rad);cursor:pointer;font-family:inherit;color:var(--text)">✓</button>
+    </div>` : `
+    <button onclick="editReal('${m.id}')" style="font-size:11px;color:var(--text3);background:none;border:none;cursor:pointer;padding:2px 6px">✏️</button>`}
+  </div>`;
+}
+
+function editReal(mid) {
+  delete realScores[mid];
+  saveRealScores();
+  buildResultats();
+}
+
+function buildInsights(played, exactOk, issueOk, claudeExact, claudeIssue, total, avgReal, avgProno) {
+  if (total === 0) return [{
+    icon: '👋',
+    title: 'Pas encore de matchs joués',
+    text: 'Saisis les scores réels dans la section ci-dessous après chaque match pour voir l\'analyse apparaître ici.'
+  }];
+
+  const insights = [];
+  const pctIssue = Math.round((exactOk + issueOk) / total * 100);
+  const pctExact = Math.round(exactOk / total * 100);
+  const claudeTotal = claudeExact + claudeIssue;
+  const claudePct = Math.round(claudeTotal / total * 100);
+  const realGoalsPerMatch = parseFloat(avgReal);
+  const pronoGoalsPerMatch = parseFloat(avgProno);
+
+  // Performance générale
+  if (pctIssue >= 60) {
+    insights.push({ icon: '🔥', title: `Excellente forme — ${pctIssue}% d'issues correctes`, text: `Tu as correctement prédit l'issue de ${exactOk + issueOk} matchs sur ${total}. ${exactOk > 0 ? `Dont ${exactOk} score${exactOk > 1 ? 's' : ''} exact${exactOk > 1 ? 's' : ''} — excellent pour le MPP.` : 'Maintenant l\'objectif est de commencer à avoir des scores exacts.'}` });
+  } else if (pctIssue >= 40) {
+    insights.push({ icon: '📈', title: `Performance correcte — ${pctIssue}% d'issues correctes`, text: `${exactOk + issueOk} issues correctes sur ${total} matchs. C'est dans la moyenne — les matchs ouverts peuvent faire monter ce chiffre rapidement.` });
+  } else {
+    insights.push({ icon: '⚠️', title: `Phase difficile — ${pctIssue}% d'issues correctes`, text: `Seulement ${exactOk + issueOk} issues correctes sur ${total} matchs. Les surprises s'accumulent — c'est souvent le cas en début de tournoi. L'analyse des erreurs peut aider à recalibrer.` });
+  }
+
+  // Comparaison avec Claude
+  if (total >= 3) {
+    const diff = (exactOk + issueOk) - claudeTotal;
+    if (diff > 0) {
+      insights.push({ icon: '🏆', title: `Tu bats Claude ! (+${diff} issues)`, text: `Tes pronos ont donné ${exactOk + issueOk} issues correctes vs ${claudeTotal} pour les conseils Claude. Tu as eu de bonnes intuitions que l'analyse n'avait pas capturées — garde confiance dans ton jugement sur les prochains matchs.` });
+    } else if (diff === 0) {
+      insights.push({ icon: '🤝', title: 'À égalité avec Claude', text: `Même nombre d'issues correctes. Les deux approches se valent — le score exact fera la différence dans le MPP.` });
+    } else {
+      insights.push({ icon: '🤖', title: `Claude légèrement devant (+${Math.abs(diff)} issues)`, text: `Les conseils Claude ont donné ${claudeTotal} issues correctes vs ${exactOk + issueOk} pour tes pronos. Ça ne veut pas dire grand chose sur ${total} matchs — la variance est élevée. Continue à challenger les conseils, c'est ce qui crée de la valeur.` });
+    }
+  }
+
+  // Buts prévus vs réels
+  if (!isNaN(realGoalsPerMatch) && !isNaN(pronoGoalsPerMatch) && total >= 5) {
+    const diff = (pronoGoalsPerMatch - realGoalsPerMatch).toFixed(1);
+    if (Math.abs(diff) > 0.5) {
+      if (pronoGoalsPerMatch > realGoalsPerMatch) {
+        insights.push({ icon: '⬇️', title: `Tu prévois trop de buts (+${diff} buts/match)`, text: `Tu prévois en moyenne ${pronoGoalsPerMatch} buts/match mais il n'y en a que ${realGoalsPerMatch} en réalité. Le tournoi est plus défensif que prévu — calibre tes prochains scores vers le bas, surtout sur les matchs tendus.` });
+      } else {
+        insights.push({ icon: '⬆️', title: `Les matchs sont plus prolifiques que prévu (+${Math.abs(diff)} buts/match)`, text: `${realGoalsPerMatch} buts/match en réalité vs ${pronoGoalsPerMatch} prévus. Le tournoi est plus offensif — n'hésite pas à revoir tes scores vers le haut sur les prochains matchs, surtout les mismatchs.` });
+      }
+    } else {
+      insights.push({ icon: '🎯', title: `Calibrage des buts excellent`, text: `Tu prévois ${pronoGoalsPerMatch} buts/match, la réalité est ${realGoalsPerMatch}. Ton calibrage est très précis — continue sur cette lancée.` });
+    }
+  }
+
+  // Scores exacts
+  if (total >= 5 && pctExact === 0) {
+    insights.push({ icon: '🎯', title: 'Pas encore de score exact', text: `Sur ${total} matchs, aucun score exact. C'est normal en début de tournoi — les scores exacts arrivent souvent en clusters. Focus sur les mismatchs clairs (ex: grosses équipes vs petites) où les scores sont plus prévisibles.` });
+  } else if (pctExact >= 15) {
+    insights.push({ icon: '🎯', title: `${pctExact}% de scores exacts — très fort !`, text: `${exactOk} score${exactOk > 1 ? 's' : ''} exact${exactOk > 1 ? 's' : ''} sur ${total} matchs. C'est bien au-dessus de la moyenne — c'est là que tu prends un avantage décisif dans le MPP.` });
+  }
+
+  return insights;
+}
+
+function exportPronos() {
+  const txt = JSON.stringify(pronos, null, 2);
+  navigator.clipboard.writeText(txt).then(() => {
+    const ok = document.getElementById('export-ok');
+    ok.style.display = 'inline';
+    setTimeout(() => ok.style.display = 'none', 2500);
+  }).catch(() => {
+    prompt('Copie ce JSON :', txt);
+  });
+}
+
+function clearPronos() {
+  if (!confirm('Remettre tous les pronos à mes conseils par défaut ?')) return;
+  pronos = {...DEFAULT_PRONOS};
+  saveToStorage();
+  updateStats();
+  renderGroup();
+}
+
+function updateStats() {
+  const total = Object.keys(pronos).length;
+  const buts = Object.values(pronos).reduce((s,p)=>s+p.h+p.a,0);
+  document.getElementById('st-p').textContent = total;
+  document.getElementById('st-b').textContent = buts;
+  document.getElementById('st-avg').textContent = total>0?(buts/total).toFixed(1):'—';
+  document.getElementById('st-bar').style.width = Math.round(total/72*100)+'%';
+  // Refresh calendar if visible
+  if (document.getElementById('page-calendrier').classList.contains('on')) buildCalendrier();
+}
+
+function saveFav() {
+  favs.w=document.getElementById('sel-w').value;
+  favs.r=document.getElementById('sel-r').value;
+  favs.g=document.getElementById('sel-g').value;
+  favs.s=document.getElementById('sel-s').value;
+  try { localStorage.setItem('mpp2026_favs', JSON.stringify(favs)); } catch(e) {}
+  updateFavRecap();
+}
+function loadFavs() {
+  if(favs.w) document.getElementById('sel-w').value=favs.w;
+  if(favs.r) document.getElementById('sel-r').value=favs.r;
+  if(favs.g) document.getElementById('sel-g').value=favs.g;
+  if(favs.s) document.getElementById('sel-s').value=favs.s;
+}
+function updateFavRecap() {
+  const el = document.getElementById('fav-recap');
+  const lines=[];
+  if(favs.w) lines.push(`🏆 <strong>Vainqueur :</strong> ${favs.w}`);
+  if(favs.r) lines.push(`🥈 <strong>Finaliste :</strong> ${favs.r}`);
+  if(favs.g) lines.push(`⚽ <strong>Golden Boot :</strong> ${favs.g}`);
+  if(favs.s) lines.push(`✨ <strong>Outsider :</strong> ${favs.s}`);
+  el.innerHTML = lines.length ? lines.join('<br>') : 'Aucune sélection pour l\'instant.';
+}
+
+loadFromStorage();
+loadRealScores();
+buildGrid();
+renderGroup();
+</script>
+</body>
+</html>
